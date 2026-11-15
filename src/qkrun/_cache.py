@@ -1,8 +1,8 @@
 """Disk cache for task metadata to speed up autocomplete.
 
 The cache lives in a ``.qkrun_cache/`` directory inside the tasks
-directory.  An inner ``.gitignore`` is created automatically so that
-users never accidentally commit cached data.
+directory, or a sibling ``.qkrun_cache/<filename>/`` for a file module.
+An inner ``.gitignore`` prevents accidentally committing cached data.
 """
 
 from __future__ import annotations
@@ -34,6 +34,8 @@ class TaskCache:
 
     @staticmethod
     def _cache_dir(tasks_path: Path) -> Path:
+        if tasks_path.is_file():
+            return tasks_path.parent / _CACHE_DIR_NAME / tasks_path.name
         return tasks_path / _CACHE_DIR_NAME
 
     @staticmethod
@@ -111,6 +113,8 @@ class TaskCache:
     def _is_stale(tasks_path: Path, cache_mtime: float) -> bool:
         """Return `True` if any `.py` file is newer than *cache_mtime*."""
         try:
+            if tasks_path.is_file():
+                return tasks_path.stat().st_mtime > cache_mtime
             for file_path in tasks_path.rglob("*.py"):
                 # Skip hidden directories like .qkrun_cache
                 if any(part.startswith(".") for part in file_path.parts):

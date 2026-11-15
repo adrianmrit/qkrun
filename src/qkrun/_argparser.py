@@ -12,10 +12,7 @@ from qkrun.completion._internal import TaskCompleter
 
 
 class BaseArgumentParser(ArgumentParser):
-    """Base argument parser with common arguments for qk and qk-mcp.
-
-    Includes: verbosity, log-file, version, module path, and global flag.
-    """
+    """Base argument parser with shared qk logging and version arguments."""
 
     @typing.override
     def __init__(self, **kwargs):
@@ -23,7 +20,7 @@ class BaseArgumentParser(ArgumentParser):
         self._add_common_arguments()
 
     def _add_common_arguments(self) -> None:
-        """Add arguments common to both qk and qk-mcp."""
+        """Add qk logging and version arguments."""
         self.add_argument(
             "-v",
             "--verbose",
@@ -190,37 +187,3 @@ class AppArgumentParser(BaseArgumentParser):
             if normalized[tail_index - 1] == "--":
                 parsed.args.insert(0, "--")
         return parsed, unknown
-
-
-class MCPArgumentParser(BaseArgumentParser):
-    """Argument parser for the qk-mcp MCP stdio server.
-
-    Supports common arguments like verbosity and log file.
-    """
-
-    @typing.override
-    def __init__(self):
-        super().__init__(
-            prog="qk-mcp",
-            description="MCP stdio server that exposes qkrun project tasks.",
-        )
-        self.add_argument(
-            "--project",
-            action="append",
-            type=str,
-            dest="projects",
-            metavar="NAME:PATH",
-            default=None,
-            help=(
-                "Register a project as NAME:PATH where PATH points to the _qk "
-                "module or directory. Repeatable. Overrides --config on name conflict."
-            ),
-        )
-        self.add_argument(
-            "--config",
-            type=str,
-            dest="config",
-            metavar="FILE",
-            default=None,
-            help=("Path to a TOML or JSON config file declaring projects to register."),
-        )

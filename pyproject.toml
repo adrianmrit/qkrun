@@ -21,13 +21,13 @@ classifiers = [
 ]
 requires-python = ">=3.12"
 dependencies=[
-    "frozendict>=2.4",
+    "frozendict>=2.5",
     "oslex>=2.0",
     "python-dotenv>=1.2",
     "rich>=15.0",
-    "argcomplete>=3.6",
-    "fastmcp>=3.4",
-    "watchdog>=5.0",
+    "argcomplete>=3.7",
+    # Watchdog 7.1 fails/hangs native macOS watcher regression tests.
+    "watchdog>=6,<7",
 ]
 
 [project.urls]
@@ -41,7 +41,6 @@ Changelog = "https://github.com/adrianmrit/qkrun/blob/main/CHANGELOG.md"
 
 [project.scripts]
 "qk" = "qkrun._cli:main"
-"qk-mcp" = "qkrun.mcp:main"
 
 [tool.hatch.metadata]
 allow-direct-references = true
@@ -94,12 +93,12 @@ convention = "google"
 dev = [
     "sphinx>=9.1",
     "sphinx-rtd-theme>=3.1",
-    "pytest>=9.1",
+    "pytest>=9.2",
     "pytest-cov>=7.1",
-    "pytest-mock>=3.15",
-    "pre-commit>=4.6",
+    "pytest-mock>=3.17",
+    "pre-commit>=4.7",
     "mock>=5.2",
     "twine>=7.0",
-    "build>=1.5",
-    "ruff>=0.16",
+    "build>=1.6",
+    "ruff>=0.17",
 ]

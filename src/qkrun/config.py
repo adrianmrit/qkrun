@@ -312,8 +312,8 @@ class App:
 
             if not module_path.suffix == ".py":
                 full_path = full_path.with_suffix(".py")
-                if full_path.exists() and full_path.is_file():
-                    return full_path
+            if full_path.exists() and full_path.is_file():
+                return full_path
 
             if not traverse or current == current.parent:
                 break

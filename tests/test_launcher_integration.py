@@ -11,9 +11,28 @@ from qkrun._launcher import (
     ProjectNotFoundError,
     ExecutableNotFoundError,
 )
+from qkrun.discovery import discover_project_root, resolve_executable
 
 # Exit code constants
 LAUNCHER_ERROR_CODE = 2
+
+
+@pytest.mark.parametrize("marker", ["_qk", "_qk.py"])
+def test_public_discovery_boundary(tmp_path, monkeypatch, marker):
+    marker_path = tmp_path / marker
+    if marker == "_qk":
+        marker_path.mkdir()
+    else:
+        marker_path.touch()
+    child = tmp_path / "nested"
+    child.mkdir()
+    monkeypatch.chdir(child)
+    assert discover_project_root() == tmp_path
+    assert discover_project_root(child) == tmp_path
+    executable = tmp_path / "custom-qk"
+    executable.touch()
+    monkeypatch.setenv("QK_EXECUTABLE", str(executable))
+    assert resolve_executable(tmp_path) == executable
 
 
 class TestLauncherProjectDiscovery:

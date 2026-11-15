@@ -82,6 +82,20 @@ class _StubTask:
 
 
 class TestTaskCache:
+    def test_file_module_cache_isolated_and_invalidated(self, tmp_path):
+        module = tmp_path / "_qk.py"
+        other_module = tmp_path / "other.py"
+        module.write_text("# tasks")
+        other_module.write_text("# other tasks")
+        tasks = {"build": {"help": "Build it", "args": None}}
+        TaskCache.save(module, tasks, "1.1.0")
+        TaskCache.save(other_module, {}, "1.1.0")
+        assert TaskCache.load(module, "1.1.0") == tasks
+        assert TaskCache.load(other_module, "1.1.0") == {}
+        future = time.time() + 10
+        os.utime(module, (future, future))
+        assert TaskCache.load(module, "1.1.0") is None
+
     def test_save_and_load(self, tmp_path):
         tasks = {"build": {"help": "Build it", "args": None}}
         TaskCache.save(tmp_path, tasks, "1.0.0")
