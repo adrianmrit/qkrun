@@ -103,6 +103,15 @@ class TestAppLogFile:
 
 
 class TestResolveModulePath:
+    def test_explicit_and_discovered_py_module(self, tmp_path, monkeypatch):
+        py_file = tmp_path / "_qk.py"
+        py_file.write_text("# tasks file")
+        monkeypatch.chdir(tmp_path)
+        monkeypatch.delattr(qkrun_app, "_project_path", raising=False)
+        assert qkrun_app.project_path == py_file
+        qkrun_app.set_project_path("_qk.py")
+        assert qkrun_app.project_path == py_file
+
     def test_finds_py_file(self, tmp_path):
         py_file = tmp_path / "my_tasks.py"
         py_file.write_text("# tasks file")

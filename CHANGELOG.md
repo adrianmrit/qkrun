@@ -1,5 +1,10 @@
 # qkrun Change Log
 
+## Unreleased
+
+- MCP server now lives in the separate `qkrun-mcp` project. The `qk` command
+  and `_qk` task discovery are unchanged.
+
 ## 2.0.0
 
 ### Migrating to qkrun
@@ -7,14 +12,28 @@
 - Replace `quickie-runner` with `qkrun` in dependency files and installation
   commands. If switching in an existing environment, uninstall `quickie-runner`
   first, then install `qkrun` with the same package manager. Both distributions
-  provide `qk` and `qk-mcp`, so installing them together can overwrite those
-  commands.
+  provide `qk`, so installing them together can overwrite that command.
 - Update Python imports from `quickie` to `qkrun`, use `python -m qkrun`
   instead of `python -m quickie`, and replace `QuickieError` with `QkrunError`.
 - Rename `QUICKIE_RUNNER_{INFO,WARNING,ERROR,SUCCESS}_STYLE` settings to
   `QKRUN_{INFO,WARNING,ERROR,SUCCESS}_STYLE`.
-- The MCP server now identifies itself as `qkrun`. The `qk` and `qk-mcp`
-  commands and `_qk` task discovery are unchanged.
+
+### Changed
+
+- Removed the bundled MCP module, parser, and FastMCP runtime dependencies.
+  JSON task listing remains available through `qk :list --json`.
+- Added the public `qkrun.discovery.discover_project_root()` and
+  `resolve_executable()` integration boundary, reusing CLI discovery and
+  executable precedence without exposing private launcher/configuration APIs.
+- Updated compatible runtime/development requirements and refreshed `uv.lock`.
+  Kept Watchdog on 6.x after native macOS regression tests failed/hung with 7.1.
+
+### Fixed
+
+- Accept explicit ``.py`` task module paths, including discovered ``_qk.py``
+  files resolved again during CLI startup and external integration.
+- Store file-module metadata caches beside the module, isolated by filename,
+  rather than trying to create a cache directory inside a Python file.
 
 ## Release 1.0.0
 

@@ -15,8 +15,8 @@
    conditions
    config
    context
+   discovery
    errors
    factories
-   mcp
    tasks
    utils

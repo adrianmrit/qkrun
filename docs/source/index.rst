@@ -22,7 +22,6 @@ Welcome to qkrun's documentation!
    dependencies_and_cleanup
    how_tos/index
    how_tos/watch_mode
-   mcp
    api
    license
 
