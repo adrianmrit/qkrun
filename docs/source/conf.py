@@ -21,8 +21,6 @@ extensions = [
     "sphinx.ext.doctest",
     "sphinx.ext.autodoc",
     "sphinx.ext.autosummary",
-    "sphinx_toolbox.sidebar_links",
-    "sphinx_toolbox.github",
 ]
 
 templates_path = ["_templates"]
@@ -36,6 +34,3 @@ autosummary_generate = True
 
 html_theme = "sphinx_rtd_theme"
 highlight_language = "python3"
-
-github_username = "adrianmrit"
-github_repository = "qkrun"

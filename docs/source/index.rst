@@ -26,10 +26,12 @@ Welcome to qkrun's documentation!
    api
    license
 
+.. toctree::
+   :caption: Links
+   :hidden:
 
-.. sidebar-links::
-   :github:
-   :pypi: qkrun
+   GitHub <https://github.com/adrianmrit/qkrun>
+   PyPI <https://pypi.org/project/qkrun>
 
 
 Indices and tables

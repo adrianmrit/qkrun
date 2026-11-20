@@ -23,5 +23,5 @@ def docs(*args):
     return f"""
     rm -rf docs/build
     rm -rf docs/source/generated
-    uv run sphinx-build -M html docs/source docs/build {args}
+    uv run --group dev sphinx-build -M html docs/source docs/build {args}
     """

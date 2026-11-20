@@ -93,7 +93,6 @@ convention = "google"
 [dependency-groups]
 dev = [
     "sphinx>=9.1",
-    "sphinx-toolbox>=4.3",
     "sphinx-rtd-theme>=3.1",
     "pytest>=9.1",
     "pytest-cov>=7.1",
