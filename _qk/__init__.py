@@ -68,7 +68,7 @@ def _pre_release_checks(version):
     changelog_path = "CHANGELOG.md"
     with open(changelog_path) as f:
         changelog = f.read()
-    assert f"## Release {version}" in changelog, (
+    assert f"## {version}" in changelog, (
         f"Changelog does not have an entry for version {version}"
     )
 
@@ -87,13 +87,17 @@ def _commit_release(message, version):
 
 @task(
     args=[
-        Arg("-m", "--message", help="Commit message", required=True),
+        Arg("-m", "--message", help="Commit message", required=False),
         Arg("-v", "--version", help="Version to release", required=True),
     ],
 )
 def release(version, message):
     """Release a new version."""
     from .build import build, docs
+
+    if message is None:
+        # Use Conventional Commit format for the release message
+        message = f"build(release): {version}"
 
     _pre_release_checks(version)
     _ensure_no_unstaged_changes()

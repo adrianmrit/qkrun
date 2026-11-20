@@ -1,6 +1,8 @@
 # qkrun Change Log
 
-## Unreleased
+## 2.1.0
+
+## Changed
 
 - MCP server now lives in the separate `qkrun-mcp` project. The `qk` command
   and `_qk` task discovery are unchanged.
@@ -35,7 +37,7 @@
 - Store file-module metadata caches beside the module, isolated by filename,
   rather than trying to create a cache directory inside a Python file.
 
-## Release 1.0.0
+## 1.0.0
 
 ### Fixed
 
@@ -56,7 +58,7 @@
   positional argument descriptions, usage forms, and examples.
 - Improved shell completion for task names and colon-prefixed subcommands.
 
-## Release 0.11.0
+## 0.11.0
 
 ### Added
 
@@ -86,7 +88,7 @@
 - Human-readable task listings now include bordered rows. MCP task listings
   expose the same canonical-name and alias behavior.
 
-## Release 0.10.1
+## 0.10.1
 
 ### Changed
 
@@ -102,7 +104,7 @@
 - Fixed ``TypeError`` when using ``watch_paths`` and related watch options with
   ``@script`` or other decorators backed by the shared task factory.
 
-## Release 0.10.0
+## 0.10.0
 
 ### Changed
 
@@ -139,13 +141,13 @@
 - Added mtime-based caching to ``Launcher.discover_project_root()`` to
   avoid redundant directory walks when discovering the project root.
 
-## Release 0.9.1
+## 0.9.1
 
 ### Changed
 
 - Upgraded dependencies
 
-## Release 0.9.0
+## 0.9.0
 
 ### Changed
 
@@ -161,7 +163,7 @@
   supported by the `qk` CLI). Use `--project` to register a project path.
 
 
-## Release 0.8.1
+## 0.8.1
 
 ### Fixed
 
@@ -170,14 +172,14 @@
 - Tests: fixed asyncio mocks and added tests for MCP venv resolution.
 
 
-## Release 0.8.0
+## 0.8.0
 
 ### Added
 
 - Added `qk-mcp` MCP stdio server.
 
 
-## Release 0.7.0
+## 0.7.0
 
 ### Added
 
@@ -211,7 +213,7 @@
 
 - Documented direct task-to-task composition pattern: call a task instance from within another task's `run()` to receive its result.
 
-## Release 0.6.0
+## 0.6.0
 
 ### Added
 
@@ -245,12 +247,12 @@
 - **For global task users**: Migrate from `qkg` to `qk --global` or `qk -g`. The `quickie-runner-global` package and `qkg` command are no longer available.
 - **For users with multiple project versions**: Your setup is now natively supported. Each project can pin its own quickie version, and `qk` will automatically delegate to the correct version.
 
-## Release 0.5.1
+## 0.5.1
 
 ### Changed
 - Only show error tracebacks when verbosity is set to 2 or higher.
 
-## Release 0.5.0
+## 0.5.0
 
 ### Removed
 - Removed `partial_task`. `functools.partial` can be used instead.
@@ -284,7 +286,7 @@
 - Can define the working directory for a command or script to be the parent of the tasks directory.
 
 
-## Release 0.4.0
+## 0.4.0
 
 ### Changed
 
@@ -294,13 +296,13 @@
 - Cleaner exit on keyboard interrupt.
 - Changed command from `qck` and `qckg` to `qk` and `qkg`.
 
-## Release 0.3.3
+## 0.3.3
 
 ### Changed
 
 - Tasks are listed sorted by location, and grouped by class, creating a new table for aliases.
 
-## Release 0.3.2
+## 0.3.2
 
 ### Added
 
@@ -310,13 +312,13 @@
 
 - Fix bug causing tasks the help message for tasks to not include the docstring.
 
-## Release 0.3.1
+## 0.3.1
 
 ### Changed
 
 - fix quickie-runner-global dependencies
 
-## Release 0.3.0
+## 0.3.0
 
 ### Changed
 
@@ -328,15 +330,15 @@
 - `NAMESPACES` (previously `QCK_NAMESPACES`) now also accepts a list of modules to load for
   a single namespace.
 
-## Release 0.2.2
+## 0.2.2
 
 Fixes for global runner.
 
-## Release 0.2.1
+## 0.2.1
 
 Fixes for global runner.
 
-## Release 0.2.0
+## 0.2.0
 
 ### Added
 
@@ -354,6 +356,6 @@ Fixes for global runner.
 - Removed support for file-based configuration in favor of environment variables.
 - Removed `-g` argument in favor of separate global runner.
 
-## Release 0.1.0
+## 0.1.0
 
 - Initial release.
