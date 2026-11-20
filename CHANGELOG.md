@@ -1,6 +1,20 @@
-# Quickie Change Log
+# qkrun Change Log
 
-## Unreleased
+## 2.0.0
+
+### Migrating to qkrun
+
+- Replace `quickie-runner` with `qkrun` in dependency files and installation
+  commands. If switching in an existing environment, uninstall `quickie-runner`
+  first, then install `qkrun` with the same package manager. Both distributions
+  provide `qk` and `qk-mcp`, so installing them together can overwrite those
+  commands.
+- Update Python imports from `quickie` to `qkrun`, use `python -m qkrun`
+  instead of `python -m quickie`, and replace `QuickieError` with `QkrunError`.
+- Rename `QUICKIE_RUNNER_{INFO,WARNING,ERROR,SUCCESS}_STYLE` settings to
+  `QKRUN_{INFO,WARNING,ERROR,SUCCESS}_STYLE`.
+- The MCP server now identifies itself as `qkrun`. The `qk` and `qk-mcp`
+  commands and `_qk` task discovery are unchanged.
 
 ## Release 1.0.0
 

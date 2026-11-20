@@ -1,4 +1,4 @@
-"""Tests for quickie.mcp — the FastMCP server."""
+"""Tests for qkrun.mcp — the FastMCP server."""
 
 from __future__ import annotations
 
@@ -12,7 +12,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 import pytest
 from fastmcp import Client
 
-from quickie.mcp import _Project, _projects, main, mcp
+from qkrun.mcp import _Project, _projects, main, mcp
 
 pytestmark = pytest.mark.anyio
 
@@ -573,7 +573,7 @@ async def test_run_task_uses_local_qk_exe_when_set():
 
 
 async def test_run_task_falls_back_to_sys_executable_when_no_local_exe():
-    """When no local exe is resolved, sys.executable -m quickie is used."""
+    """When no local exe is resolved, sys.executable -m qkrun is used."""
     _register_project("default", exe=None, extra_args=[])
     proc = _make_proc_mock([], [], returncode=0)
     captured_cmd = {}
@@ -588,7 +588,7 @@ async def test_run_task_falls_back_to_sys_executable_when_no_local_exe():
 
     assert captured_cmd["cmd"][0] == sys.executable
     assert "-m" in captured_cmd["cmd"]
-    assert "quickie" in captured_cmd["cmd"]
+    assert "qkrun" in captured_cmd["cmd"]
 
 
 async def test_run_task_forwards_extra_args():
@@ -682,7 +682,7 @@ def test_main_project_discovers_exe_from_path(tmp_path):
     (qk_dir / ".venv" / "pyvenv.cfg").write_text("home = /usr/bin\nuv = true\n")
 
     with patch("sys.argv", ["qk-mcp", "--project", f"myproject:{qk_dir}"]):
-        with patch("quickie.mcp.mcp") as mock_mcp:
+        with patch("qkrun.mcp.mcp") as mock_mcp:
             mock_mcp.run = MagicMock()
             main()
 
@@ -696,9 +696,9 @@ def test_main_project_flag(tmp_path):
     qk_dir.mkdir()
 
     with patch("sys.argv", ["qk-mcp", "--project", f"myapp:{qk_dir}"]):
-        with patch("quickie.mcp.mcp") as mock_mcp:
+        with patch("qkrun.mcp.mcp") as mock_mcp:
             mock_mcp.run = MagicMock()
-            with patch("quickie.mcp.Launcher") as MockLauncher:
+            with patch("qkrun.mcp.Launcher") as MockLauncher:
                 instance = MockLauncher.return_value
                 instance.discover_project_root.return_value = tmp_path
                 instance.resolve_executable.return_value = None
@@ -716,9 +716,9 @@ def test_main_config_toml(tmp_path):
     config_file.write_text(f'[projects]\nmyapp = "{qk_dir}"\n')
 
     with patch("sys.argv", ["qk-mcp", "--config", str(config_file)]):
-        with patch("quickie.mcp.mcp") as mock_mcp:
+        with patch("qkrun.mcp.mcp") as mock_mcp:
             mock_mcp.run = MagicMock()
-            with patch("quickie.mcp.Launcher") as MockLauncher:
+            with patch("qkrun.mcp.Launcher") as MockLauncher:
                 instance = MockLauncher.return_value
                 instance.discover_project_root.return_value = tmp_path
                 instance.resolve_executable.return_value = None
@@ -735,9 +735,9 @@ def test_main_config_json(tmp_path):
     config_file.write_text(json.dumps({"projects": {"myapp": str(qk_dir)}}))
 
     with patch("sys.argv", ["qk-mcp", "--config", str(config_file)]):
-        with patch("quickie.mcp.mcp") as mock_mcp:
+        with patch("qkrun.mcp.mcp") as mock_mcp:
             mock_mcp.run = MagicMock()
-            with patch("quickie.mcp.Launcher") as MockLauncher:
+            with patch("qkrun.mcp.Launcher") as MockLauncher:
                 instance = MockLauncher.return_value
                 instance.discover_project_root.return_value = tmp_path
                 instance.resolve_executable.return_value = None
@@ -760,9 +760,9 @@ def test_main_project_flag_overrides_config(tmp_path):
         "sys.argv",
         ["qk-mcp", "--config", str(config_file), "--project", f"myapp:{qk_b}"],
     ):
-        with patch("quickie.mcp.mcp") as mock_mcp:
+        with patch("qkrun.mcp.mcp") as mock_mcp:
             mock_mcp.run = MagicMock()
-            with patch("quickie.mcp.Launcher") as MockLauncher:
+            with patch("qkrun.mcp.Launcher") as MockLauncher:
                 instance = MockLauncher.return_value
                 instance.discover_project_root.return_value = tmp_path / "b"
                 instance.resolve_executable.return_value = None

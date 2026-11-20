@@ -23,18 +23,18 @@ Default shells per platform:
 
 .. code-block:: python
 
-    from quickie import script
+    from qkrun import script
 
     @script
     def hello_script():
         return "echo 'Hello, World!'"
 
 
-This will return a :class:`quickie.tasks.Script` instance, equivalent to:
+This will return a :class:`qkrun.tasks.Script` instance, equivalent to:
 
 .. code-block:: python
 
-    from quickie import Script
+    from qkrun import Script
 
     class HelloScript(Script):
         def get_script(self):
@@ -45,7 +45,7 @@ To pass arguments you can simply use string formatting:
 
 .. code-block:: python
 
-    from quickie import script, Arg
+    from qkrun import script, Arg
 
     @script(args=[
         Arg("name"),
@@ -58,7 +58,7 @@ Setting the ``executable`` attribute of the task will change the shell used to r
 
 .. code-block:: python
 
-    from quickie import script
+    from qkrun import script
 
     @script(executable="python")
     def hello_script():
@@ -70,7 +70,7 @@ Environment variables
 
 Pass per-task environment variables with ``env``::
 
-    from quickie import script
+    from qkrun import script
 
     @script(env={"API_KEY": "secret"})
     def deploy():
@@ -80,13 +80,13 @@ To load variables from a ``.env`` file, use ``env_file``:
 
 .. code-block:: python
 
-    from quickie import script
+    from qkrun import script
 
     @script(env_file=".env")
     def deploy():
         return "my_deploy_tool.sh"
 
-Relative paths are resolved from the quickie tasks root directory (the folder
+Relative paths are resolved from the qkrun tasks root directory (the folder
 that contains ``_qk/``). Absolute paths are used as-is.
 
 When both ``env`` and ``env_file`` are supplied, values in ``env`` take
@@ -114,7 +114,7 @@ If a script intentionally uses a non-zero exit code, allow it explicitly with ``
 
 .. code-block:: python
 
-    from quickie import script
+    from qkrun import script
 
     @script(expected_exit_codes=(0, 5))
     def script_with_expected_failure():
@@ -131,14 +131,14 @@ To limit how long a single script attempt may run, set ``timeout`` (in seconds):
 
 .. code-block:: python
 
-    from quickie import script
+    from qkrun import script
 
     @script(timeout=30)
     def long_script():
         return "my_tool --process"
 
 If the script does not finish within the allotted time, a
-:exc:`~quickie.errors.SubprocessTimeoutError` is raised (exit code 124).
+:exc:`~qkrun.errors.SubprocessTimeoutError` is raised (exit code 124).
 The same attribute is available on subclasses.
 
 Retry
@@ -149,7 +149,7 @@ number of *additional* attempts:
 
 .. code-block:: python
 
-    from quickie import script
+    from qkrun import script
 
     @script(retries=3)
     def flaky_script():
@@ -163,8 +163,8 @@ An optional ``retry_delay`` (in seconds) can be added to wait between attempts:
     def flaky_script():
         return "curl https://example.com/api"
 
-Retries are triggered by both :exc:`~quickie.errors.SubprocessExitCodeError` and
-:exc:`~quickie.errors.SubprocessTimeoutError`. If all attempts fail, the last
+Retries are triggered by both :exc:`~qkrun.errors.SubprocessExitCodeError` and
+:exc:`~qkrun.errors.SubprocessTimeoutError`. If all attempts fail, the last
 exception is re-raised. A warning is logged for each failed attempt and each retry.
 Both attributes are available on subclasses.
 
@@ -178,12 +178,12 @@ By default, script output streams directly to the terminal. Use
 - ``"capture"`` — output is captured as bytes; nothing is printed.
 - ``"tee"`` — output streams to the terminal *and* is captured.
 
-Both :class:`~quickie.tasks.OutputMode` enum values and plain string literals
+Both :class:`~qkrun.tasks.OutputMode` enum values and plain string literals
 are accepted interchangeably:
 
 .. code-block:: python
 
-    from quickie import script, task, OutputMode
+    from qkrun import script, task, OutputMode
 
     # Using the enum
     @script(output_mode=OutputMode.CAPTURE)

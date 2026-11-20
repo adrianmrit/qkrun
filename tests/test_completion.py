@@ -1,17 +1,17 @@
-from quickie import task, tasks, app
-from quickie._namespace import RootNamespace
-from quickie.completion._internal import TaskCompleter
-from quickie.completion.python import PytestCompleter
-from quickie.completion.base import BaseCompleter
-from quickie.errors import TasksModuleNotFoundError
-from quickie.completion import PathCompleter
+from qkrun import task, tasks, app
+from qkrun._namespace import RootNamespace
+from qkrun.completion._internal import TaskCompleter
+from qkrun.completion.python import PytestCompleter
+from qkrun.completion.base import BaseCompleter
+from qkrun.errors import TasksModuleNotFoundError
+from qkrun.completion import PathCompleter
 import os
 import pytest
 
 
 class TestTaskCompleter:
     def test_complete(self, mocker):
-        mocker.patch("quickie.app._tasks", RootNamespace(), create=True)
+        mocker.patch("qkrun.app._tasks", RootNamespace(), create=True)
 
         class MyTask(tasks.Task):
             """My task"""
@@ -58,11 +58,11 @@ class NestedClass:
         pass
 """
         mocker.patch(
-            "quickie.completion.PathCompleter.get_pre_filtered_paths",
+            "qkrun.completion.PathCompleter.get_pre_filtered_paths",
             return_value=["test.py", "test2.py", "other.py", "other"],
         )
         mocker.patch(
-            "quickie.completion.python.PytestCompleter._read_python_file",
+            "qkrun.completion.python.PytestCompleter._read_python_file",
             return_value=python_code,
         )
         completer = PytestCompleter()
@@ -121,11 +121,11 @@ class NestedClass:
         pass
 """
         mocker.patch(
-            "quickie.completion.PathCompleter.get_pre_filtered_paths",
+            "qkrun.completion.PathCompleter.get_pre_filtered_paths",
             return_value=["test.py", "test2.py", "other.py", "other"],
         )
         mocker.patch(
-            "quickie.completion.python.PytestCompleter._read_python_file",
+            "qkrun.completion.python.PytestCompleter._read_python_file",
             return_value=python_code,
         )
         completer = PytestCompleter()
@@ -152,10 +152,10 @@ class TestBaseCompleter:
 
 
 class TestTaskCompleterError:
-    def test_complete_suppresses_quickie_error(self, mocker):
+    def test_complete_suppresses_qkrun_error(self, mocker):
         mock_ns = mocker.MagicMock()
         mock_ns.items.side_effect = TasksModuleNotFoundError("_qk")
-        mocker.patch("quickie.app._tasks", mock_ns)
+        mocker.patch("qkrun.app._tasks", mock_ns)
 
         completer = TaskCompleter()
         result = completer(prefix="", action=None, parser=None, parsed_args=None)  # type: ignore[arg-type]

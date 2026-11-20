@@ -1612,7 +1612,7 @@ wheels = [
 ]
 
 [[package]]
-name = "quickie-runner"
+name = "qkrun"
 source = { editable = "." }
 dependencies = [
     { name = "argcomplete" },

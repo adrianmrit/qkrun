@@ -1,10 +1,12 @@
-# Quickie - A CLI Tool for Quick Tasks
+# qkrun - A CLI Tool for Quick Tasks
 
-[![License](https://img.shields.io/github/license/adrianmrit/quickie)](https://github.com/adrianmrit/quickie/blob/master/LICENSE)
+[![License](https://img.shields.io/github/license/adrianmrit/qkrun)](https://github.com/adrianmrit/qkrun/blob/main/LICENSE)
 
-Quickie is a powerful and flexible command-line tool designed to simplify task automation. It supports both per-project and global task configurations, making it ideal for developers and teams.
+qkrun is a powerful and flexible command-line tool designed to simplify task automation. It supports both per-project and global task configurations, making it ideal for developers and teams.
 
-Documentation is available at [quickie.readthedocs.io](https://quickie.readthedocs.io/en/latest/).
+Documentation is available at [qkrun.readthedocs.io](https://qkrun.readthedocs.io/en/latest/).
+
+Upgrading from `quickie-runner`? See the [migration notes](CHANGELOG.md#2.0.0).
 
 ## Development
 

@@ -1,4 +1,4 @@
-from quickie import Arg, script
+from qkrun import Arg, script
 
 
 @script(
@@ -15,5 +15,5 @@ def install(editable=False, dev=False):
     return f"""
     uv pip install {editable} .{dev}
     rm -rf build
-    rm -rf src/quickie.egg-info
+    rm -rf src/qkrun.egg-info
     """

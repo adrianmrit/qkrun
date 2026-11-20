@@ -5,8 +5,8 @@ import threading
 
 from pytest import mark, raises
 
-from quickie._watcher import FileWatcher, _DEFAULT_EXCLUDE
-from quickie._argparser import AppArgumentParser
+from qkrun._watcher import FileWatcher, _DEFAULT_EXCLUDE
+from qkrun._argparser import AppArgumentParser
 
 
 class TestFileWatcherInit:
@@ -17,7 +17,7 @@ class TestFileWatcherInit:
         assert "**/.git/**" in _DEFAULT_EXCLUDE
         assert "**/__pycache__/**" in _DEFAULT_EXCLUDE
         assert "**/*.pyc" in _DEFAULT_EXCLUDE
-        assert "**/.quickie_cache/**" in _DEFAULT_EXCLUDE
+        assert "**/.qkrun_cache/**" in _DEFAULT_EXCLUDE
 
     def test_custom_exclude(self, tmp_path):
         """Custom exclude patterns override defaults."""

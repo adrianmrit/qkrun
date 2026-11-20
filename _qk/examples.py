@@ -2,17 +2,17 @@ import json
 import shlex
 import sys
 
-from quickie import script, task, command, OutputMode
-from quickie import console
-from quickie.errors import Skip, Stop
-from quickie.utils.argparser import Arg
+from qkrun import script, task, command, OutputMode
+from qkrun import console
+from qkrun.errors import Skip, Stop
+from qkrun.utils.argparser import Arg
 
 
 @task(
     args=[
         Arg("--name", required=True),
     ],
-    watch_paths=["./src/quickie"],
+    watch_paths=["./src/qkrun"],
 )
 def hello(name):
     console.print(f"Hello {name}!")
@@ -62,7 +62,7 @@ def extra_script_example(*extra, name):
     return shlex.join(_extra_command(extra, name))
 
 
-@script(env={"OTHER": "Other"}, bind=True, wd=".", watch_paths=["./src/quickie"])
+@script(env={"OTHER": "Other"}, bind=True, wd=".", watch_paths=["./src/qkrun"])
 def script_example(task):
     """Example script that runs a command."""
     return """

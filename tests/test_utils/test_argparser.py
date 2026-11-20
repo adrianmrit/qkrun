@@ -2,7 +2,7 @@ import argparse
 from unittest.mock import MagicMock
 
 
-from quickie.utils.argparser import Arg, _get_default_completer
+from qkrun.utils.argparser import Arg, _get_default_completer
 
 
 def test_default_completer_with_choices():

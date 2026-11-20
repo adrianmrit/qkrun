@@ -6,9 +6,9 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-from quickie import _meta
+from qkrun import _meta
 
-project = "Quickie Runner"
+project = "qkrun"
 copyright = "2024, Adrian Martinez Rodriguez"
 author = "Adrian Martinez Rodriguez"
 release = _meta.__version__
@@ -38,4 +38,4 @@ html_theme = "sphinx_rtd_theme"
 highlight_language = "python3"
 
 github_username = "adrianmrit"
-github_repository = "quickie"
+github_repository = "qkrun"

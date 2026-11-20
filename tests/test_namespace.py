@@ -4,15 +4,15 @@ import types
 
 import pytest
 
-from quickie._namespace import (
+from qkrun._namespace import (
     Namespace,
     RootNamespace,
     namespace,
     _merge_alias,
     _merge_aliases,
 )
-from quickie.errors import CircularDependencyError, TaskNotFoundError
-from quickie.factories import task
+from qkrun.errors import CircularDependencyError, TaskNotFoundError
+from qkrun.factories import task
 
 
 def _mod(**kwargs):

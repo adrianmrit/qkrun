@@ -1,8 +1,8 @@
 from collections import ChainMap
 import os
 from pathlib import Path
-from quickie import app
-from quickie.context import Context, load_env_file, resolve_wd
+from qkrun import app
+from qkrun.context import Context, load_env_file, resolve_wd
 from unittest.mock import PropertyMock
 
 

@@ -1,10 +1,10 @@
 Custom Factories
 ================
 
-Quickie provides a way to create custom factories for your tasks. This allows you to create tasks that are tailored to your specific needs,
+qkrun provides a way to create custom factories for your tasks. This allows you to create tasks that are tailored to your specific needs,
 and to reuse code across multiple tasks.
 
-To make the creation of custom factories easier, Quickie provides the :func:`quickie.factories.task_factory_helper` function. This function takes care of the
+To make the creation of custom factories easier, qkrun provides the :func:`qkrun.factories.task_factory_helper` function. This function takes care of the
 boilerplate code for you, and allows you to create a custom factory with just a few lines of code.
 
 In the following example we have taken care of adding type hints, but you can skip this step if you don't need them.
@@ -12,8 +12,8 @@ In the following example we have taken care of adding type hints, but you can sk
 .. code-block:: python
 
     import typing as t
-    from quickie.tasks import Command
-    from quickie.factories import task_factory_helper, PartialReturnType, CommonTaskKwargs
+    from qkrun.tasks import Command
+    from qkrun.factories import task_factory_helper, PartialReturnType, CommonTaskKwargs
 
     @t.overload
     def git(obj: t.Callable | type) -> type[Command]:
@@ -48,8 +48,8 @@ Without the type hints, the code would look like this:
 
 .. code-block:: python
 
-    from quickie.tasks import Command
-    from quickie.factories import task_factory_helper
+    from qkrun.tasks import Command
+    from qkrun.factories import task_factory_helper
 
     def git(fn=None, **kwargs):
         return task_factory_helper(

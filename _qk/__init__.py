@@ -1,5 +1,5 @@
-from quickie import script, task, command, namespace
-from quickie.utils.argparser import Arg
+from qkrun import script, task, command, namespace
+from qkrun.utils.argparser import Arg
 
 
 @namespace
@@ -41,7 +41,15 @@ def examples_n():
 def upload():
     """Upload the package to PyPI using Twine."""
     return """
-    uv run python -m twine upload dist/*
+    uv run python -m twine upload dist/* --verbose
+    """
+
+
+@script
+def test_upload():
+    # Check and try uploading the package to PyPI test repository
+    return """
+    uv run python -m twine upload --repository testpypi dist/* --verbose
     """
 
 
@@ -52,7 +60,7 @@ def _ensure_no_unstaged_changes():
 
 @task(private=True)
 def _pre_release_checks(version):
-    from quickie._meta import __version__
+    from qkrun._meta import __version__
 
     assert __version__ == version, f"Version mismatch: {__version__} != {version}"
 
@@ -77,42 +85,25 @@ def _commit_release(message, version):
     """
 
 
-def _build():
-    from .build import build
-
-    return build()
-
-
-def _build_docs():
-    from .build import docs
-
-    return docs()
-
-
 @task(
     args=[
         Arg("-m", "--message", help="Commit message", required=True),
         Arg("-v", "--version", help="Version to release", required=True),
     ],
-    before=[
-        _ensure_no_unstaged_changes,
-        _build,
-        _build_docs,
-        _ensure_no_unstaged_changes,
-    ],
-    after=[
-        upload,
-    ],
 )
 def release(version, message):
     """Release a new version."""
+    from .build import build, docs
+
     _pre_release_checks(version)
     _ensure_no_unstaged_changes()
-    _build_docs()
+    build()
+    docs()
     # Again, to manually inspect the docs changes if anything new was generated.
     _ensure_no_unstaged_changes()
     _commit_release(message, version)
     # Again, pre-commit might have made changes
     _ensure_no_unstaged_changes()
     # Finally, upload the package to PyPI
+    test_upload()
     upload()

@@ -6,16 +6,16 @@ from unittest.mock import PropertyMock
 
 import pytest
 
-import quickie._namespace
-from quickie import tasks, app
-from quickie.conditions import condition
-from quickie.context import Context
-from quickie.errors import (
+import qkrun._namespace
+from qkrun import tasks, app
+from qkrun.conditions import condition
+from qkrun.context import Context
+from qkrun.errors import (
     SubprocessExitCodeError,
     SubprocessTimeoutError,
     TaskNotFoundError,
 )
-from quickie.factories import (
+from qkrun.factories import (
     command,
     group,
     script,
@@ -23,7 +23,7 @@ from quickie.factories import (
     task_factory_helper,
     thread_group,
 )
-from quickie.tasks import MAX_SHORT_HELP_LENGTH, OutputMode, identifier_to_task_name
+from qkrun.tasks import MAX_SHORT_HELP_LENGTH, OutputMode, identifier_to_task_name
 
 
 class TestGlobalNamespace:
@@ -31,7 +31,7 @@ class TestGlobalNamespace:
         class MyTask(tasks.Task):
             pass
 
-        root_namespace = quickie._namespace.RootNamespace()
+        root_namespace = qkrun._namespace.RootNamespace()
         root_namespace.register(MyTask(), namespace="mytask")
         assert isinstance(root_namespace["mytask"], MyTask)
 
@@ -589,8 +589,8 @@ class TestBaseSubprocessTask:
             "context",
             Context(wd="/example/cwd", env={}, inherit_env=False),
         )
-        mocker.patch("quickie.tasks.os.path.exists", return_value=True)
-        mocker.patch("quickie.tasks.sys.executable", "/venv/bin/python")
+        mocker.patch("qkrun.tasks.os.path.exists", return_value=True)
+        mocker.patch("qkrun.tasks.sys.executable", "/venv/bin/python")
 
         @command
         def my_task():
@@ -616,8 +616,8 @@ class TestBaseSubprocessTask:
             "context",
             Context(wd="/example/cwd", env={}, inherit_env=False),
         )
-        mocker.patch("quickie.tasks.os.path.exists", return_value=False)
-        mocker.patch("quickie.tasks.shutil.which", return_value=None)
+        mocker.patch("qkrun.tasks.os.path.exists", return_value=False)
+        mocker.patch("qkrun.tasks.shutil.which", return_value=None)
 
         @command
         def my_task():
@@ -823,7 +823,7 @@ def test_identifier_to_task_name():
 
 class TestTaskExtended:
     def test_skip_inside_run(self):
-        from quickie.errors import Skip
+        from qkrun.errors import Skip
 
         @task
         def my_task():
@@ -867,9 +867,9 @@ class TestTaskExtended:
         def before_task():
             result.append("before")
 
-        tasks_ns = quickie._namespace.RootNamespace()
+        tasks_ns = qkrun._namespace.RootNamespace()
         tasks_ns.register(before_task, namespace="before-task")
-        mocker.patch("quickie.app._tasks", tasks_ns)
+        mocker.patch("qkrun.app._tasks", tasks_ns)
 
         @task(before=["before-task"])
         def main_task():
@@ -915,7 +915,7 @@ class TestTaskExtended:
 
         module.__dict__["hello"] = hello
 
-        ns = quickie._namespace.RootNamespace()
+        ns = qkrun._namespace.RootNamespace()
         ns.load(module)
 
         assert ns["hello"] is hello
@@ -931,7 +931,7 @@ class TestTaskExtended:
 
         module.__dict__["private_task"] = private_task
 
-        ns = quickie._namespace.RootNamespace()
+        ns = qkrun._namespace.RootNamespace()
         ns.load(module)
 
         assert len(ns) == 0
@@ -943,9 +943,7 @@ class TestBaseSubprocessTaskExtended:
     def test_wd_dot_uses_tasks_path_parent(self, mocker):
         from pathlib import Path
 
-        mocker.patch(
-            "quickie.app._project_path", Path("/abs/tasks_module"), create=True
-        )
+        mocker.patch("qkrun.app._project_path", Path("/abs/tasks_module"), create=True)
 
         class MyTask(tasks._BaseSubprocessTask):
             wd = "."
@@ -1577,14 +1575,14 @@ class TestRootNamespace:
         def my_task():
             pass
 
-        ns = quickie._namespace.RootNamespace()
+        ns = qkrun._namespace.RootNamespace()
         ns.register(my_task, namespace=["alias1", "alias2"])
 
         assert ns["alias1"] is my_task
         assert ns["alias2"] is my_task
 
     def test_getitem_missing_raises(self):
-        ns = quickie._namespace.RootNamespace()
+        ns = qkrun._namespace.RootNamespace()
         with pytest.raises(TaskNotFoundError):
             ns["nonexistent"]
 
@@ -1602,7 +1600,7 @@ class TestRootNamespace:
         module.__dict__["first_task"] = first_task
         module.__dict__["second_task"] = second_task
 
-        ns = quickie._namespace.RootNamespace()
+        ns = qkrun._namespace.RootNamespace()
         ns.load(module)
 
         assert ns["first"] is first_task
@@ -1619,7 +1617,7 @@ class TestRootNamespace:
         def beta_task():
             pass
 
-        module.__dict__["namespace"] = quickie._namespace.Namespace(
+        module.__dict__["namespace"] = qkrun._namespace.Namespace(
             {
                 "lvl1": {
                     "lvl2": {
@@ -1631,7 +1629,7 @@ class TestRootNamespace:
             }
         )
 
-        ns = quickie._namespace.RootNamespace()
+        ns = qkrun._namespace.RootNamespace()
         ns.load(module)
 
         assert ns["lvl1:lvl2:lvl3:lvl4:alpha"] is alpha_task
@@ -1642,7 +1640,7 @@ class TestRootNamespace:
         def private_task():
             pass
 
-        ns = quickie._namespace.RootNamespace()
+        ns = qkrun._namespace.RootNamespace()
         ns.register(private_task, namespace="manual:private")
 
         assert ns["manual:private"] is private_task
@@ -1685,7 +1683,7 @@ class TestTaskFileLocation:
 
 class TestAddArgs:
     def test_add_args_with_arg_instance(self):
-        from quickie.utils.argparser import Arg
+        from qkrun.utils.argparser import Arg
 
         @task(args=[Arg("--my-arg")])
         def my_task(my_arg=None):

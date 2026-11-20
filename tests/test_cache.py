@@ -6,7 +6,7 @@ import os
 import time
 
 
-from quickie._cache import (
+from qkrun._cache import (
     TaskCache,
     _detect_completer_type,
     build_cache_entry,
@@ -96,7 +96,7 @@ class TestTaskCache:
         assert TaskCache.load(tmp_path, "2.0.0") is None
 
     def test_load_returns_none_on_corrupt_file(self, tmp_path):
-        cache_dir = tmp_path / ".quickie_cache"
+        cache_dir = tmp_path / ".qkrun_cache"
         cache_dir.mkdir()
         (cache_dir / "task_names.json").write_text("not json{{{")
         assert TaskCache.load(tmp_path, "1.0.0") is None
@@ -114,26 +114,26 @@ class TestTaskCache:
 
     def test_gitignore_created(self, tmp_path):
         TaskCache.save(tmp_path, {}, "1.0.0")
-        gitignore = tmp_path / ".quickie_cache" / ".gitignore"
+        gitignore = tmp_path / ".qkrun_cache" / ".gitignore"
         assert gitignore.exists()
         content = gitignore.read_text()
         assert content == "*\n"
 
     def test_gitignore_not_overwritten(self, tmp_path):
         TaskCache.save(tmp_path, {}, "1.0.0")
-        gitignore = tmp_path / ".quickie_cache" / ".gitignore"
+        gitignore = tmp_path / ".qkrun_cache" / ".gitignore"
         gitignore.write_text("custom\n")
         # Save again — should not overwrite
         TaskCache.save(tmp_path, {}, "1.0.0")
         assert gitignore.read_text() == "custom\n"
 
     def test_hidden_dirs_ignored_by_staleness(self, tmp_path):
-        """Changes inside .quickie_cache should not invalidate the cache."""
+        """Changes inside .qkrun_cache should not invalidate the cache."""
         TaskCache.save(tmp_path, {"t": {"help": "", "args": None}}, "1.0.0")
 
-        # Write into .quickie_cache — should NOT make it stale
+        # Write into .qkrun_cache — should NOT make it stale
         time.sleep(0.05)
-        (tmp_path / ".quickie_cache" / "extra.txt").write_text("data")
+        (tmp_path / ".qkrun_cache" / "extra.txt").write_text("data")
 
         result = TaskCache.load(tmp_path, "1.0.0")
         assert result is not None
@@ -231,7 +231,7 @@ class TestRebuildParser:
         }
         parser = rebuild_parser("test", cached_args)
         action = [a for a in parser._actions if a.dest == "path"][0]
-        from quickie.completion import PathCompleter
+        from qkrun.completion import PathCompleter
 
         assert isinstance(action.completer, PathCompleter)
 
@@ -253,7 +253,7 @@ class TestRebuildParser:
         }
         parser = rebuild_parser("test", cached_args)
         action = [a for a in parser._actions if a.dest == "target"][0]
-        from quickie.completion.python import PytestCompleter
+        from qkrun.completion.python import PytestCompleter
 
         assert isinstance(action.completer, PytestCompleter)
 
@@ -273,7 +273,7 @@ class TestDetectCompleterType:
     def test_path_completer(self):
         import argparse
 
-        from quickie.completion import PathCompleter
+        from qkrun.completion import PathCompleter
 
         action = argparse.Action(option_strings=[], dest="x")
         action.completer = PathCompleter()

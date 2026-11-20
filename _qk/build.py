@@ -1,4 +1,4 @@
-from quickie import script, console, app
+from qkrun import script, console, app
 
 
 @script

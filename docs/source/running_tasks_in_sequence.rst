@@ -2,11 +2,11 @@ Running tasks in sequence
 =========================
 
 Group tasks are used to run multiple tasks in sequence.
-The simplest way is to use the :func:`quickie.group` decorator to define a group task, which should return a list of tasks:
+The simplest way is to use the :func:`qkrun.group` decorator to define a group task, which should return a list of tasks:
 
 .. code-block:: python
 
-    from quickie import group
+    from qkrun import group
 
     @task
     def task1():
@@ -21,11 +21,11 @@ The simplest way is to use the :func:`quickie.group` decorator to define a group
         return [task1, task2]
 
 
-This will return a :class:`quickie.tasks.Group` instance, equivalent to:
+This will return a :class:`qkrun.tasks.Group` instance, equivalent to:
 
 .. code-block:: python
 
-    from quickie import Group
+    from qkrun import Group
 
     ...
 

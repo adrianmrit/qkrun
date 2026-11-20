@@ -1,22 +1,22 @@
 Task
 ====
 
-The simplest form of tasks are functions that just run Python code, and the easiest way to define them is by using the :func:`quickie.task` decorator.
+The simplest form of tasks are functions that just run Python code, and the easiest way to define them is by using the :func:`qkrun.task` decorator.
 
 .. code-block:: python
 
-    from quickie import task
+    from qkrun import task
 
     @task
     def hello():
         print("Hello, World!")
 
 
-This will return a :class:`quickie.tasks.Task` instance, equivalent to:
+This will return a :class:`qkrun.tasks.Task` instance, equivalent to:
 
 .. code-block:: python
 
-    from quickie import Task
+    from qkrun import Task
 
     @task
     class hello(Task):
@@ -36,14 +36,14 @@ Defining tasks as functions is usually simpler and more concise, but defining th
 Calling tasks from within run()
 --------------------------------
 
-A task's :meth:`~quickie.tasks.Task.__call__` method runs the full lifecycle
+A task's :meth:`~qkrun.tasks.Task.__call__` method runs the full lifecycle
 (condition → before → run → after → cleanup) and returns whatever ``run()``
 returns.  This means you can compose tasks freely from inside another task's
 ``run()`` method and work with their results directly:
 
 .. code-block:: python
 
-    from quickie import task, Task
+    from qkrun import task, Task
 
     @task
     def fetch():
@@ -70,13 +70,13 @@ Return values
 
 Every task type has a defined return contract:
 
-- :class:`~quickie.tasks.Task` — returns whatever ``run()`` returns (any value).
-- :class:`~quickie.tasks.Command` / :class:`~quickie.tasks.Script` — returns
+- :class:`~qkrun.tasks.Task` — returns whatever ``run()`` returns (any value).
+- :class:`~qkrun.tasks.Command` / :class:`~qkrun.tasks.Script` — returns
   :class:`subprocess.CompletedProcess`.
-- :class:`~quickie.tasks.Group` — returns ``list[Any]``, one entry per
+- :class:`~qkrun.tasks.Group` — returns ``list[Any]``, one entry per
   sub-task, **in definition order**.
-- :class:`~quickie.tasks.ThreadGroup` — returns ``list[Any]``, one entry per
+- :class:`~qkrun.tasks.ThreadGroup` — returns ``list[Any]``, one entry per
   sub-task, **in definition order** (not completion order).
 
-When a task's condition fails or :exc:`~quickie.errors.Skip` is raised inside
-``run()``, :meth:`~quickie.tasks.Task.__call__` returns ``None``.
+When a task's condition fails or :exc:`~qkrun.errors.Skip` is raised inside
+``run()``, :meth:`~qkrun.tasks.Task.__call__` returns ``None``.
