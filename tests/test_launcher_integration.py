@@ -6,7 +6,7 @@ from unittest.mock import patch
 
 import pytest
 
-from quickie._launcher import (
+from qkrun._launcher import (
     Launcher,
     ProjectNotFoundError,
     ExecutableNotFoundError,
@@ -231,7 +231,7 @@ class TestLauncherErrorHandling:
         cwd.mkdir()
 
         error = ProjectNotFoundError(cwd)
-        assert "No quickie project found" in str(error)
+        assert "No qkrun project found" in str(error)
         assert str(cwd) in str(error)
         assert "qk --init" in str(error)
         assert error.exit_code == LAUNCHER_ERROR_CODE
@@ -242,7 +242,7 @@ class TestLauncherErrorHandling:
         project.mkdir()
 
         error = ExecutableNotFoundError(project)
-        assert "Could not find quickie executable" in str(error)
+        assert "Could not find qkrun executable" in str(error)
         assert str(project) in str(error)
         assert error.exit_code == LAUNCHER_ERROR_CODE
 

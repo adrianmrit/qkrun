@@ -5,7 +5,7 @@ Tasks can depend on other tasks (or simple functions). This is useful when you w
 
 .. code-block:: python
 
-    from quickie import task
+    from qkrun import task
 
     @task
     def task1():
@@ -33,12 +33,12 @@ The tasks are executed in the following order:
 If a task fails, the cleanup tasks will still run. And if one of the cleanup tasks fails, the rest of the cleanup tasks will still run.
 
 Before, After and Cleanup Tasks will not take the arguments from the parent. If you need to pass arguments :func:`functools.partial` or a lambda
-function can be used. You can also override :meth:`quickie.tasks.Task.get_before`, :meth:`quickie.tasks.Task.get_after`, and :meth:`quickie.tasks.Task.get_cleanup` methods to
+function can be used. You can also override :meth:`qkrun.tasks.Task.get_before`, :meth:`qkrun.tasks.Task.get_after`, and :meth:`qkrun.tasks.Task.get_cleanup` methods to
 dynamically get the dependencies and any arguments.
 
 .. code-block:: python
 
-    from quickie import task, Task
+    from qkrun import task, Task
 
     @task
     def task1(*args, **kwargs):

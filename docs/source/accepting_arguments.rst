@@ -21,7 +21,7 @@ the task function's signature.
 
 .. code-block:: python
 
-    from quickie import Arg, task
+    from qkrun import Arg, task
 
     @task(
         args=[

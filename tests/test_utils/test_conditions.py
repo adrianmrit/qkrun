@@ -1,8 +1,8 @@
 from pathlib import Path
 import pytest
 
-from quickie.conditions import All, FilesModified, FirstRun, PathsExist, condition
-from quickie.factories import task
+from qkrun.conditions import All, FilesModified, FirstRun, PathsExist, condition
+from qkrun.factories import task
 
 
 class TestFilesModified:

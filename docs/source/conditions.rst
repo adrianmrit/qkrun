@@ -1,20 +1,20 @@
 Conditions
 ==========
 
-Conditions are used to determine if a task should run or not. There are some built-in conditions provided by Quickie, and you can also create your own.
+Conditions are used to determine if a task should run or not. There are some built-in conditions provided by qkrun, and you can also create your own.
 
 
 FirstRun
 --------
 
-The :class:`quickie.conditions.FirstRun` condition is used to run a task only the first time it is called, or the first time with specific arguments if ``check_args`` is set to ``True``.
+The :class:`qkrun.conditions.FirstRun` condition is used to run a task only the first time it is called, or the first time with specific arguments if ``check_args`` is set to ``True``.
 It is useful for tasks that should not be repeated, such as initialization tasks or one-time setup.
 
 It can be used as follows:
 
 .. code-block:: python
 
-    from quickie import task, FirstRun
+    from qkrun import task, FirstRun
 
     @task(condition=FirstRun())
     def my_task():
@@ -28,21 +28,21 @@ It can be used as follows:
 FilesModified
 -------------
 
-The :class:`quickie.conditions.FilesModified` condition is used to run a task only if certain files have been modified since the last run.
+The :class:`qkrun.conditions.FilesModified` condition is used to run a task only if certain files have been modified since the last run.
 It can be used to ensure that tasks are only run when necessary, such as when a requirement file has changed.
 
 It can be used as follows:
 
 .. code-block:: python
 
-    from quickie import task, FilesModified
+    from qkrun import task, FilesModified
 
     @task(condition=FilesModified("cache_unique_identifier", paths=["file1.txt", "file2.txt", "folder"], exclude=["folder/other.txt"]))
     def my_task():
         print("This will only run if file1.txt, file2.txt or any file under folder, except folder/other.txt, have been modified")
 
 
-:class:`quickie.conditions.FilesModified` takes the following parameters:
+:class:`qkrun.conditions.FilesModified` takes the following parameters:
 
 - ``cache_id``: The identifier of the condition, used as part of the cache file
   name. It should be unique for each condition instance to avoid conflicts. It
@@ -50,21 +50,21 @@ It can be used as follows:
   random string like an UUID.
 - ``paths``: The files to check.
 - ``exclude``: The files to exclude from the check.
-- ``algorithm``: The algorithm to use for checking. Can be one of :class:`quickie.FilesModified.Algorithm` or a string representing the algorithm name, such as ``md5``, ``sha1``, ``sha256``, or ``timestamp``.
+- ``algorithm``: The algorithm to use for checking. Can be one of :class:`qkrun.FilesModified.Algorithm` or a string representing the algorithm name, such as ``md5``, ``sha1``, ``sha256``, or ``timestamp``.
 - ``allow_missing``: If True, missing files will be treated as if they have not been modified. Defaults to False.
 
 
 PathsExist
 ----------
 
-The :class:`quickie.conditions.PathsExist` condition is used to run a task only if all specified paths exist.
+The :class:`qkrun.conditions.PathsExist` condition is used to run a task only if all specified paths exist.
 It can be used to ensure that tasks are only run when certain files or directories are present.
 
 It can be used as follows:
 
 .. code-block:: python
 
-    from quickie import task, PathsExist
+    from qkrun import task, PathsExist
 
     @task(condition=PathsExist("file1.txt", "file2.txt", "folder"))
     def my_task():
@@ -74,12 +74,12 @@ It can be used as follows:
 All
 ---
 
-The :class:`quickie.conditions.All` condition is a convenience class that allows you to combine multiple conditions and return True only if all of them pass.
+The :class:`qkrun.conditions.All` condition is a convenience class that allows you to combine multiple conditions and return True only if all of them pass.
 It can be used as follows:
 
 .. code-block:: python
 
-    from quickie import task, conditions
+    from qkrun import task, conditions
 
     @task(condition=conditions.All(conditions.FirstRun(), conditions.PathsExist("file1.txt", "file2.txt")))
     def some_task():
@@ -89,14 +89,14 @@ It can be used as follows:
 Custom conditions
 -----------------
 
-Custom conditions can be created from a function by using the :func:`quickie.conditions.condition` decorator, or by subclassing :class:`quickie.conditions.BaseCondition`.
+Custom conditions can be created from a function by using the :func:`qkrun.conditions.condition` decorator, or by subclassing :class:`qkrun.conditions.BaseCondition`.
 
 For example:
 
 .. code-block:: python
 
     import os
-    from quickie import task, conditions
+    from qkrun import task, conditions
 
     @conditions.condition
     def my_custom_condition(task, *args, **kwargs):
@@ -131,7 +131,7 @@ Conditions can be combined using the following logical operators:
 
 .. code-block:: python
 
-    from quickie import task, conditions
+    from qkrun import task, conditions
 
     @task(condition=conditions.FirstRun() | conditions.FilesModified("cache_unique_identifier", paths=["file1.txt", "file2.txt"]))
     def some_task():
@@ -145,7 +145,7 @@ Conditions cannot be skipped directly, but since you can call conditions in the 
 
 .. code-block:: python
 
-    from quickie import task, conditions, Arg, errors
+    from qkrun import task, conditions, Arg, errors
 
     @task
     def my_before_requirement():

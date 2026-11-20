@@ -7,7 +7,7 @@ passing the ``private=True`` argument to the task decorator.
 
 .. code-block:: python
 
-    from quickie import task
+    from qkrun import task
 
     @task(private=True)
     def private_task():

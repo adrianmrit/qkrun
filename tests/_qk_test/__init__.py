@@ -1,5 +1,5 @@
-from quickie import tasks, Namespace, task
-from quickie import app
+from qkrun import tasks, Namespace, task
+from qkrun import app
 
 from . import nested
 

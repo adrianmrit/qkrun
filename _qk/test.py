@@ -1,6 +1,6 @@
 import shlex
 
-from quickie import command, script
+from qkrun import command, script
 
 
 @command(extra_args=True)

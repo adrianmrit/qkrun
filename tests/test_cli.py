@@ -8,15 +8,15 @@ import shlex
 import pytest
 from pytest import mark, raises
 
-from quickie import _cli
-from quickie._argparser import AppArgumentParser
-from quickie._namespace import RootNamespace
-from quickie.commands.autocomplete import _suggest_bash, _suggest_zsh
-from quickie.commands.list_ import ListCommand
-from quickie.errors import SubprocessExitCodeError
-from quickie.errors import Skip, Stop
-from quickie.factories import task
-from quickie import app as quickie_app
+from qkrun import _cli
+from qkrun._argparser import AppArgumentParser
+from qkrun._namespace import RootNamespace
+from qkrun.commands.autocomplete import _suggest_bash, _suggest_zsh
+from qkrun.commands.list_ import ListCommand
+from qkrun.errors import SubprocessExitCodeError
+from qkrun.errors import Skip, Stop
+from qkrun.factories import task
+from qkrun import app as qkrun_app
 
 PYTHON_PATH = sys.executable
 BIN_FOLDER = os.path.join(sys.prefix, "bin")
@@ -28,9 +28,9 @@ BIN_LOCATION = os.path.join(BIN_FOLDER, "qk")
     "argv",
     [
         [BIN_LOCATION, "-h"],
-        [PYTHON_PATH, "-m", "quickie", "-h", "examples:hello"],
-        [PYTHON_PATH, "-m", "quickie", "examples:hello", "--name", "alice"],
-        [PYTHON_PATH, "-m", "quickie", "-h"],
+        [PYTHON_PATH, "-m", "qkrun", "-h", "examples:hello"],
+        [PYTHON_PATH, "-m", "qkrun", "examples:hello", "--name", "alice"],
+        [PYTHON_PATH, "-m", "qkrun", "-h"],
     ],
 )  # yapf: disable
 def test_from_cli(argv):
@@ -41,7 +41,7 @@ def test_from_cli(argv):
 @mark.integration
 def test_example_hello_requires_name():
     result = subprocess.run(
-        [PYTHON_PATH, "-m", "quickie", "examples:hello"],
+        [PYTHON_PATH, "-m", "qkrun", "examples:hello"],
         capture_output=True,
         text=True,
         check=False,
@@ -134,7 +134,7 @@ def test_help(capsys):
 
 @mark.integration
 def test_fails_find_task():
-    with raises(_cli.QuickieError, match="Task 'nonexistent' not found"):
+    with raises(_cli.QkrunError, match="Task 'nonexistent' not found"):
         _cli.main(["nonexistent"], raise_error=True)
 
 
@@ -217,8 +217,8 @@ def test_stop_iteration(capsys, mocker):
     tasks.register(stop_no_reason, namespace="stop_no_reason")
     tasks.register(with_before, namespace="with_before")
 
-    mocker.patch("quickie.app._tasks", tasks)
-    mocker.patch("quickie.app.load_tasks")
+    mocker.patch("qkrun.app._tasks", tasks)
+    mocker.patch("qkrun.app.load_tasks")
 
     with raises(SystemExit) as exc_info:
         _cli.main(["-v", "stop"])
@@ -255,8 +255,8 @@ def test_cli_uses_last_loaded_task_on_alias_collision(mocker):
     tasks.register(first_task, namespace="shared")
     tasks.register(second_task, namespace="shared")
 
-    mocker.patch("quickie.app._tasks", tasks)
-    mocker.patch("quickie.app.load_tasks")
+    mocker.patch("qkrun.app._tasks", tasks)
+    mocker.patch("qkrun.app.load_tasks")
 
     with raises(SystemExit) as exc_info:
         _cli.main(["shared"])
@@ -288,8 +288,8 @@ def test_cli_exits_with_subprocess_return_code(capsys, mocker):
     tasks = RootNamespace()
     tasks.register(failing_task, namespace="failing-task")
 
-    mocker.patch("quickie.app._tasks", tasks)
-    mocker.patch("quickie.app.load_tasks")
+    mocker.patch("qkrun.app._tasks", tasks)
+    mocker.patch("qkrun.app.load_tasks")
 
     with raises(SystemExit) as exc_info:
         _cli.main(["failing-task"])
@@ -558,8 +558,8 @@ class TestPartitionArgs:
         ("qk :watch --paths hello hello --name a", {"alice"}, {"bob"}),
         ("qk :autocomplete ", {"bash", "zsh"}, {"hello"}),
         ("qk :watch --debounce ", set(), {"hello"}),
-        ("python -m quickie hello --", {"--name"}, {"--module"}),
-        ("python -m quickie :watch hello --name a", {"alice"}, {"bob"}),
+        ("python -m qkrun hello --", {"--name"}, {"--module"}),
+        ("python -m qkrun :watch hello --name a", {"alice"}, {"bob"}),
         ("python qk hello --", {"--name"}, {"--module"}),
     ],
 )
@@ -568,8 +568,8 @@ def test_real_shell_completion(tmp_path, cached, comp_line, expected, excluded):
     project.mkdir()
     (project / "__init__.py").write_text(
         "import os\n"
-        "from quickie import task\n"
-        "from quickie.utils.argparser import Arg\n"
+        "from qkrun import task\n"
+        "from qkrun.utils.argparser import Arg\n"
         "if os.environ.get('FAIL_TASK_IMPORT'):\n"
         "    raise RuntimeError('Cached completion must not import tasks')\n"
         "@task(args=[Arg('--name', choices=['alice', 'bob'])])\n"
@@ -579,7 +579,7 @@ def test_real_shell_completion(tmp_path, cached, comp_line, expected, excluded):
     env = dict(os.environ, QK_LAUNCHER_RUNNING="true")
     if cached:
         subprocess.run(
-            [PYTHON_PATH, "-m", "quickie", "-m", str(project), ":list", "--json"],
+            [PYTHON_PATH, "-m", "qkrun", "-m", str(project), ":list", "--json"],
             env=env,
             check=True,
             capture_output=True,
@@ -589,7 +589,7 @@ def test_real_shell_completion(tmp_path, cached, comp_line, expected, excluded):
 
     # Use an absolute module path while retaining real shell argument boundaries.
     words = shlex.split(comp_line)
-    if words[:3] == ["python", "-m", "quickie"]:
+    if words[:3] == ["python", "-m", "qkrun"]:
         module_start = 3
     elif words[:2] == ["python", "qk"]:
         module_start = 2
@@ -609,7 +609,7 @@ def test_real_shell_completion(tmp_path, cached, comp_line, expected, excluded):
         _ARGCOMPLETE_IFS="\013",
     )
     result = subprocess.run(
-        [PYTHON_PATH, "-m", "quickie", *words[module_start:]],
+        [PYTHON_PATH, "-m", "qkrun", *words[module_start:]],
         env=env,
         capture_output=True,
         text=True,
@@ -625,7 +625,7 @@ def test_real_shell_completion(tmp_path, cached, comp_line, expected, excluded):
 
 def test_unrecognized_args(capsys):
     with raises(SystemExit) as exc_info:
-        _cli.main(["--unknown-quickie-flag"])
+        _cli.main(["--unknown-qkrun-flag"])
     assert exc_info.value.code == 2
     _, err = capsys.readouterr()
     assert "unrecognized arguments" in err
@@ -641,8 +641,8 @@ def test_skip_at_top_level(capsys, mocker):
 
     tasks_ns = RootNamespace()
     tasks_ns.register(skipped_task, namespace="skipped-task")
-    mocker.patch("quickie.app._tasks", tasks_ns)
-    mocker.patch("quickie.app.load_tasks")
+    mocker.patch("qkrun.app._tasks", tasks_ns)
+    mocker.patch("qkrun.app.load_tasks")
 
     _cli.main(["-v", "skipped-task"])
     _, err = capsys.readouterr()
@@ -659,8 +659,8 @@ def test_skip_at_top_level_no_message(capsys, mocker):
 
     tasks_ns = RootNamespace()
     tasks_ns.register(skipped_task2, namespace="skipped-task2")
-    mocker.patch("quickie.app._tasks", tasks_ns)
-    mocker.patch("quickie.app.load_tasks")
+    mocker.patch("qkrun.app._tasks", tasks_ns)
+    mocker.patch("qkrun.app.load_tasks")
 
     _cli.main(["-v", "skipped-task2"])
     _, err = capsys.readouterr()
@@ -668,7 +668,7 @@ def test_skip_at_top_level_no_message(capsys, mocker):
 
 
 def test_keyboard_interrupt(mocker, capsys):
-    mocker.patch("quickie._cli.Main.__call__", side_effect=KeyboardInterrupt)
+    mocker.patch("qkrun._cli.Main.__call__", side_effect=KeyboardInterrupt)
 
     with raises(SystemExit) as exc_info:
         _cli.main([])
@@ -704,9 +704,9 @@ def test_module_flag(mocker, capsys):
 
     tasks_ns = RootNamespace()
     tasks_ns.register(module_hello, namespace="module-hello")
-    mocker.patch("quickie.app._tasks", tasks_ns)
-    mocker.patch("quickie.app.load_tasks")
-    set_project_path_mock = mocker.patch.object(quickie_app, "set_project_path")
+    mocker.patch("qkrun.app._tasks", tasks_ns)
+    mocker.patch("qkrun.app.load_tasks")
+    set_project_path_mock = mocker.patch.object(qkrun_app, "set_project_path")
 
     with raises(SystemExit):
         _cli.main(["--module", "tests/_qk_test", "module-hello"])
@@ -727,8 +727,8 @@ class TestListTasks:
 
         tasks_ns = RootNamespace()
         tasks_ns.register(sample_task, namespace="sample-task")
-        mocker.patch("quickie.app._tasks", tasks_ns)
-        mocker.patch("quickie.app.load_tasks")
+        mocker.patch("qkrun.app._tasks", tasks_ns)
+        mocker.patch("qkrun.app.load_tasks")
 
         main_obj = _cli.Main(argv=[":list"])
         ListCommand._list_tasks()
@@ -750,8 +750,8 @@ class TestListTasks:
         tasks_ns.register(aliased_task, namespace="aliased-task")
         tasks_ns.register(aliased_task, namespace="alias1")
         tasks_ns.register(aliased_task, namespace="alias2")
-        mocker.patch("quickie.app._tasks", tasks_ns)
-        mocker.patch("quickie.app.load_tasks")
+        mocker.patch("qkrun.app._tasks", tasks_ns)
+        mocker.patch("qkrun.app.load_tasks")
 
         ListCommand._list_tasks()
 
@@ -767,7 +767,7 @@ class TestListTasks:
         tasks_ns = RootNamespace()
         tasks_ns.register(test_task, namespace="ci:test-task")
         tasks_ns.register(test_task, namespace="ci:check")
-        mocker.patch("quickie.app._tasks", tasks_ns)
+        mocker.patch("qkrun.app._tasks", tasks_ns)
 
         ListCommand._list_tasks("CHECK")
 
@@ -786,7 +786,7 @@ class TestListTasks:
         location = f"src/{'nested/' * 12}task.py:123"
         output = io.StringIO()
         console = rich.console.Console(file=output, width=50, force_terminal=True)
-        mocker.patch.object(quickie_app, "console", console)
+        mocker.patch.object(qkrun_app, "console", console)
         mocker.patch.object(
             ListCommand,
             "_task_list_entries",
@@ -819,9 +819,9 @@ class TestListTasks:
 
         tasks_ns = RootNamespace()
         tasks_ns.register(sample_task, namespace="sample-task")
-        mocker.patch("quickie.app._tasks", tasks_ns)
+        mocker.patch("qkrun.app._tasks", tasks_ns)
 
-        mocker.patch("quickie.app.load_tasks")
+        mocker.patch("qkrun.app.load_tasks")
 
         ListCommand._list_tasks("")
 
@@ -841,8 +841,8 @@ class TestListTasksJson:
 
         tasks_ns = RootNamespace()
         tasks_ns.register(json_task, namespace="json-task")
-        mocker.patch("quickie.app._tasks", tasks_ns)
-        mocker.patch("quickie.app.load_tasks")
+        mocker.patch("qkrun.app._tasks", tasks_ns)
+        mocker.patch("qkrun.app.load_tasks")
 
         ListCommand._list_tasks_json()
 
@@ -862,7 +862,7 @@ class TestListTasksJson:
         tasks_ns = RootNamespace()
         tasks_ns.register(check, namespace="ci:check")
         tasks_ns.register(check, namespace="ci:verify")
-        mocker.patch("quickie.app._tasks", tasks_ns)
+        mocker.patch("qkrun.app._tasks", tasks_ns)
 
         ListCommand._list_tasks_json()
 
@@ -878,7 +878,7 @@ class TestListTasksJson:
         tasks_ns = RootNamespace()
         tasks_ns.register(check, namespace="check")
         tasks_ns.register(check, namespace="ci:check")
-        mocker.patch("quickie.app._tasks", tasks_ns)
+        mocker.patch("qkrun.app._tasks", tasks_ns)
 
         ListCommand._list_tasks_json()
 
@@ -894,7 +894,7 @@ class TestListTasksJson:
         tasks_ns = RootNamespace()
         tasks_ns.register(task_b, namespace="n:a")
         tasks_ns.register(task_b, namespace="n:b")
-        mocker.patch("quickie.app._tasks", tasks_ns)
+        mocker.patch("qkrun.app._tasks", tasks_ns)
 
         ListCommand._list_tasks_json()
 
@@ -910,7 +910,7 @@ class TestListTasksJson:
         tasks_ns = RootNamespace()
         tasks_ns.register(task_obj, namespace="n:z")
         tasks_ns.register(task_obj, namespace="n:a")
-        mocker.patch("quickie.app._tasks", tasks_ns)
+        mocker.patch("qkrun.app._tasks", tasks_ns)
 
         ListCommand._list_tasks_json()
 
@@ -948,10 +948,10 @@ class TestMainErrorHandling:
 
     def test_main_with_stop_exception(self, mocker, capsys):
         """Test main() handles Stop exception."""
-        mocker.patch("quickie.app.load_tasks")
-        mocker.patch("quickie.app.set_project_path")
-        mocker.patch("quickie.app.set_use_global")
-        mocker.patch("quickie.app.set_log_file")
+        mocker.patch("qkrun.app.load_tasks")
+        mocker.patch("qkrun.app.set_project_path")
+        mocker.patch("qkrun.app.set_use_global")
+        mocker.patch("qkrun.app.set_log_file")
 
         @task
         def stop_task():
@@ -959,7 +959,7 @@ class TestMainErrorHandling:
 
         tasks_ns = RootNamespace()
         tasks_ns.register(stop_task, namespace="stop-task")
-        mocker.patch("quickie.app._tasks", tasks_ns)
+        mocker.patch("qkrun.app._tasks", tasks_ns)
 
         with raises(SystemExit) as exc_info:
             _cli.main(["--global", "stop-task"])
@@ -967,10 +967,10 @@ class TestMainErrorHandling:
 
     def test_main_with_skip_exception(self, mocker, capsys):
         """Test main() handles Skip exception."""
-        mocker.patch("quickie.app.load_tasks")
-        mocker.patch("quickie.app.set_project_path")
-        mocker.patch("quickie.app.set_use_global")
-        mocker.patch("quickie.app.set_log_file")
+        mocker.patch("qkrun.app.load_tasks")
+        mocker.patch("qkrun.app.set_project_path")
+        mocker.patch("qkrun.app.set_use_global")
+        mocker.patch("qkrun.app.set_log_file")
 
         @task
         def skip_task():
@@ -978,38 +978,38 @@ class TestMainErrorHandling:
 
         tasks_ns = RootNamespace()
         tasks_ns.register(skip_task, namespace="skip-task")
-        mocker.patch("quickie.app._tasks", tasks_ns)
+        mocker.patch("qkrun.app._tasks", tasks_ns)
 
         with raises(SystemExit) as exc_info:
             _cli.main(["--global", "skip-task"])
         assert exc_info.value.code == 0
 
-    def test_main_with_quickie_error_raise(self, mocker):
-        """Test main() raises QuickieError when raise_error=True."""
-        mocker.patch("quickie.app.load_tasks")
-        mocker.patch("quickie.app.set_project_path")
-        mocker.patch("quickie.app.set_use_global")
-        mocker.patch("quickie.app.set_log_file")
+    def test_main_with_qkrun_error_raise(self, mocker):
+        """Test main() raises QkrunError when raise_error=True."""
+        mocker.patch("qkrun.app.load_tasks")
+        mocker.patch("qkrun.app.set_project_path")
+        mocker.patch("qkrun.app.set_use_global")
+        mocker.patch("qkrun.app.set_log_file")
 
-        from quickie.errors import QuickieError
+        from qkrun.errors import QkrunError
 
         @task
         def error_task():
-            raise QuickieError("Test error", exit_code=1)
+            raise QkrunError("Test error", exit_code=1)
 
         tasks_ns = RootNamespace()
         tasks_ns.register(error_task, namespace="error-task")
-        mocker.patch("quickie.app._tasks", tasks_ns)
+        mocker.patch("qkrun.app._tasks", tasks_ns)
 
-        with raises(QuickieError):
+        with raises(QkrunError):
             _cli.main(["--global", "error-task"], raise_error=True)
 
     def test_main_with_global_flag(self, mocker):
         """Test main() with --global flag bypasses launcher."""
-        mocker.patch("quickie.app.load_tasks")
-        mocker.patch("quickie.app.set_project_path")
-        mocker.patch("quickie.app.set_use_global")
-        mocker.patch("quickie.app.set_log_file")
+        mocker.patch("qkrun.app.load_tasks")
+        mocker.patch("qkrun.app.set_project_path")
+        mocker.patch("qkrun.app.set_use_global")
+        mocker.patch("qkrun.app.set_log_file")
 
         @task
         def global_task():
@@ -1017,7 +1017,7 @@ class TestMainErrorHandling:
 
         tasks_ns = RootNamespace()
         tasks_ns.register(global_task, namespace="global-task")
-        mocker.patch("quickie.app._tasks", tasks_ns)
+        mocker.patch("qkrun.app._tasks", tasks_ns)
 
         with raises(SystemExit):
             _cli.main(["--global", "global-task"])
@@ -1031,10 +1031,10 @@ class TestMainErrorHandling:
 
     def test_main_with_list_flag(self, mocker, capsys):
         """Test main() with --list flag."""
-        mocker.patch("quickie.app.load_tasks")
-        mocker.patch("quickie.app.set_project_path")
-        mocker.patch("quickie.app.set_use_global")
-        mocker.patch("quickie.app.set_log_file")
+        mocker.patch("qkrun.app.load_tasks")
+        mocker.patch("qkrun.app.set_project_path")
+        mocker.patch("qkrun.app.set_use_global")
+        mocker.patch("qkrun.app.set_log_file")
 
         @task
         def list_task():
@@ -1043,7 +1043,7 @@ class TestMainErrorHandling:
 
         tasks_ns = RootNamespace()
         tasks_ns.register(list_task, namespace="list-task")
-        mocker.patch("quickie.app._tasks", tasks_ns)
+        mocker.patch("qkrun.app._tasks", tasks_ns)
 
         with raises(SystemExit):
             _cli.main(["--global", ":list"])
@@ -1060,12 +1060,12 @@ class TestWatchTask:
         """Helper to register a task in the namespace."""
         ns = RootNamespace()
         ns.register(task_obj, namespace=name)
-        mocker.patch("quickie.app._tasks", ns)
-        mocker.patch("quickie.app.load_tasks")
+        mocker.patch("qkrun.app._tasks", ns)
+        mocker.patch("qkrun.app.load_tasks")
 
     @pytest.mark.parametrize("command", [[], [":watch", "--paths", "src"]])
     def test_task_options_reach_each_execution(self, mocker, command):
-        watcher = mocker.patch("quickie._watcher.FileWatcher").return_value
+        watcher = mocker.patch("qkrun._watcher.FileWatcher").return_value
         watcher.wait_for_changes.side_effect = [True, False]
         names = []
 
@@ -1081,7 +1081,7 @@ class TestWatchTask:
 
     def test_watch_task_runs_task_once(self, mocker, capsys):
         """watch_task runs the task immediately on start."""
-        mock_watcher_class = mocker.patch("quickie._watcher.FileWatcher")
+        mock_watcher_class = mocker.patch("qkrun._watcher.FileWatcher")
         instance = mock_watcher_class.return_value
         instance.wait_for_changes.side_effect = KeyboardInterrupt
 
@@ -1100,7 +1100,7 @@ class TestWatchTask:
 
     def test_watch_task_starts_watcher_after_initial_run(self, mocker):
         """Initial task changes are not treated as a watch trigger."""
-        mock_watcher_class = mocker.patch("quickie._watcher.FileWatcher")
+        mock_watcher_class = mocker.patch("qkrun._watcher.FileWatcher")
         instance = mock_watcher_class.return_value
         instance.wait_for_changes.side_effect = KeyboardInterrupt
         events = []
@@ -1119,7 +1119,7 @@ class TestWatchTask:
 
     def test_watch_task_reruns_on_changes(self, mocker, capsys):
         """watch_task re-runs when changes are detected."""
-        mock_watcher_class = mocker.patch("quickie._watcher.FileWatcher")
+        mock_watcher_class = mocker.patch("qkrun._watcher.FileWatcher")
         instance = mock_watcher_class.return_value
         instance.wait_for_changes.side_effect = [True, KeyboardInterrupt]
         instance.changed_paths.return_value = ["src/example.py"]
@@ -1139,7 +1139,7 @@ class TestWatchTask:
 
     def test_watch_task_with_ignore_pattern(self, mocker, capsys):
         """watch_task prints ignore patterns."""
-        mock_watcher_class = mocker.patch("quickie._watcher.FileWatcher")
+        mock_watcher_class = mocker.patch("qkrun._watcher.FileWatcher")
         instance = mock_watcher_class.return_value
         instance.wait_for_changes.side_effect = KeyboardInterrupt
 
@@ -1164,7 +1164,7 @@ class TestWatchTask:
 
     def test_watch_task_custom_debounce(self, mocker):
         """watch_task passes debounce to FileWatcher."""
-        mock_watcher_class = mocker.patch("quickie._watcher.FileWatcher")
+        mock_watcher_class = mocker.patch("qkrun._watcher.FileWatcher")
         instance = mock_watcher_class.return_value
         instance.wait_for_changes.side_effect = KeyboardInterrupt
 
@@ -1189,7 +1189,7 @@ class TestWatchTask:
 
     def test_watch_task_uses_task_defaults(self, mocker):
         """watch_task falls back to task-defined watch_paths."""
-        mock_watcher_class = mocker.patch("quickie._watcher.FileWatcher")
+        mock_watcher_class = mocker.patch("qkrun._watcher.FileWatcher")
         instance = mock_watcher_class.return_value
         instance.wait_for_changes.side_effect = KeyboardInterrupt
 
@@ -1208,7 +1208,7 @@ class TestWatchTask:
 
     def test_watch_task_cli_overrides_task_defaults(self, mocker):
         """CLI args override task-defined defaults."""
-        mock_watcher_class = mocker.patch("quickie._watcher.FileWatcher")
+        mock_watcher_class = mocker.patch("qkrun._watcher.FileWatcher")
         instance = mock_watcher_class.return_value
         instance.wait_for_changes.side_effect = KeyboardInterrupt
 
@@ -1233,7 +1233,7 @@ class TestWatchTask:
 
     def test_watch_task_splits_cli_patterns_and_passes_recursive(self, mocker):
         """CLI watch patterns use semicolons and recursive reaches watcher."""
-        mock_watcher_class = mocker.patch("quickie._watcher.FileWatcher")
+        mock_watcher_class = mocker.patch("qkrun._watcher.FileWatcher")
         instance = mock_watcher_class.return_value
         instance.wait_for_changes.side_effect = KeyboardInterrupt
 
@@ -1263,7 +1263,7 @@ class TestWatchTask:
 
     def test_watch_task_stop_message(self, mocker, capsys):
         """Ctrl+C prints watching stopped message."""
-        mock_watcher_class = mocker.patch("quickie._watcher.FileWatcher")
+        mock_watcher_class = mocker.patch("qkrun._watcher.FileWatcher")
         instance = mock_watcher_class.return_value
         instance.wait_for_changes.side_effect = KeyboardInterrupt
 
@@ -1287,7 +1287,7 @@ class TestWatchTask:
 
     def test_watch_task_default_watch_paths(self, mocker):
         """watch_task defaults to ['.'] when no paths given."""
-        mock_watcher_class = mocker.patch("quickie._watcher.FileWatcher")
+        mock_watcher_class = mocker.patch("qkrun._watcher.FileWatcher")
         instance = mock_watcher_class.return_value
         instance.wait_for_changes.side_effect = KeyboardInterrupt
 
@@ -1305,7 +1305,7 @@ class TestWatchTask:
 
     def test_watch_task_stops_watcher_on_exit(self, mocker):
         """watch_task calls watcher.stop() in finally block."""
-        mock_watcher_class = mocker.patch("quickie._watcher.FileWatcher")
+        mock_watcher_class = mocker.patch("qkrun._watcher.FileWatcher")
         instance = mock_watcher_class.return_value
         instance.wait_for_changes.side_effect = KeyboardInterrupt
 

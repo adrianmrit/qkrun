@@ -2,11 +2,11 @@ Running Tasks in Parallel
 =========================
 
 Thread group tasks are used to run multiple tasks in parallel.
-The simplest way is to use the :func:`quickie.thread_group` decorator to define a thread group task:
+The simplest way is to use the :func:`qkrun.thread_group` decorator to define a thread group task:
 
 .. code-block:: python
 
-    from quickie import thread_group
+    from qkrun import thread_group
 
     def task1():
         print("Task 1")
@@ -20,11 +20,11 @@ The simplest way is to use the :func:`quickie.thread_group` decorator to define 
         return [task1, task2]
 
 
-This will return a :class:`quickie.tasks.ThreadGroup` instance, equivalent to:
+This will return a :class:`qkrun.tasks.ThreadGroup` instance, equivalent to:
 
 .. code-block:: python
 
-    from quickie import ThreadGroup
+    from qkrun import ThreadGroup
 
     ...
 
@@ -39,21 +39,21 @@ re-raised together as a single :exc:`ExceptionGroup`:
 
 .. code-block:: python
 
-    import quickie
+    import qkrun
 
-    @quickie.task
+    @qkrun.task
     def fail_a():
         raise ValueError("A went wrong")
 
-    @quickie.task
+    @qkrun.task
     def fail_b():
         raise RuntimeError("B went wrong")
 
-    @quickie.thread_group
+    @qkrun.thread_group
     def my_group():
         return [fail_a, fail_b]
 
-    @quickie.task
+    @qkrun.task
     def run_group():
         try:
             my_group()

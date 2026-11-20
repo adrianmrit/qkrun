@@ -6,7 +6,7 @@ import sys
 
 import pytest
 
-from quickie import _cli
+from qkrun import _cli
 
 
 PROJECT = Path(__file__).resolve().parents[1] / "_qk"
@@ -61,7 +61,7 @@ ARGUMENT_CASES = [
     pytest.param(
         ["target", "--paths", "task-path", "-v", "-g", ":list"],
         {"paths": "task-path", "extra": ["-v", "-g", ":list"]},
-        id="quickie-and-watch-option-collisions",
+        id="qkrun-and-watch-option-collisions",
     ),
     pytest.param(
         ["target", "--", "--name", "alice", "--count", "2", "--help"],
@@ -155,7 +155,7 @@ def run_example(command, task_name, args):
         [
             sys.executable,
             "-m",
-            "quickie",
+            "qkrun",
             "-m",
             str(PROJECT),
             *command,
@@ -182,7 +182,7 @@ def test_task_argument_combinations(command, args, overrides):
 @pytest.mark.integration
 @pytest.mark.parametrize("args, overrides", ARGUMENT_CASES)
 def test_watch_argument_combinations(mocker, capsys, args, overrides):
-    watcher_class = mocker.patch("quickie._watcher.FileWatcher")
+    watcher_class = mocker.patch("qkrun._watcher.FileWatcher")
     watcher = watcher_class.return_value
     watcher.wait_for_changes.side_effect = [True, False]
     watcher.changed_paths.return_value = ["src/example.py"]
@@ -211,7 +211,7 @@ def test_invalid_task_argument_combinations(command, task_name, args, error):
 @pytest.mark.integration
 @pytest.mark.parametrize("task_name, args, error", INVALID_CASES)
 def test_watch_rejects_invalid_task_arguments(mocker, capsys, task_name, args, error):
-    watcher_class = mocker.patch("quickie._watcher.FileWatcher")
+    watcher_class = mocker.patch("qkrun._watcher.FileWatcher")
     with pytest.raises(SystemExit) as exc_info:
         _cli.main(["-m", str(PROJECT), ":watch", task_name, *args])
     assert exc_info.value.code == 2  # noqa: PLR2004
@@ -236,7 +236,7 @@ def test_subprocess_task_extra_arguments(command, task_name, args, expected):
 @pytest.mark.parametrize("task_name", SUBPROCESS_TASKS)
 @pytest.mark.parametrize("args, expected", SUBPROCESS_CASES)
 def test_watch_subprocess_extra_arguments(mocker, capfd, task_name, args, expected):
-    watcher = mocker.patch("quickie._watcher.FileWatcher").return_value
+    watcher = mocker.patch("qkrun._watcher.FileWatcher").return_value
     watcher.wait_for_changes.side_effect = [True, False]
     watcher.changed_paths.return_value = ["src/example.py"]
     with pytest.raises(SystemExit) as exc_info:

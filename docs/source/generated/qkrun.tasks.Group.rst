@@ -1,0 +1,62 @@
+﻿qkrun.tasks.Group
+=================
+
+.. currentmodule:: qkrun.tasks
+
+.. autoclass:: Group
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Group.__init__
+      ~Group.add_args
+      ~Group.condition_passes
+      ~Group.full_run
+      ~Group.get_after
+      ~Group.get_before
+      ~Group.get_cleanup
+      ~Group.get_help
+      ~Group.get_parser
+      ~Group.get_plain_usage
+      ~Group.get_short_help
+      ~Group.get_tasks
+      ~Group.get_watch_config
+      ~Group.log_task_execution
+      ~Group.log_task_execution_details
+      ~Group.parse_and_run
+      ~Group.parse_args
+      ~Group.run
+      ~Group.run_after
+      ~Group.run_before
+      ~Group.run_cleanup
+      ~Group.to_info_dict
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Group.after
+      ~Group.args
+      ~Group.before
+      ~Group.cleanup
+      ~Group.condition
+      ~Group.extra_args
+      ~Group.parser
+      ~Group.tasks
+      ~Group.watch_debounce
+      ~Group.watch_ignore_paths
+      ~Group.watch_ignore_patterns
+      ~Group.watch_paths
+      ~Group.watch_patterns
+      ~Group.watch_recursive
+   
+   

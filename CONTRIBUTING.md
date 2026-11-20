@@ -1,4 +1,4 @@
-# Contributing to Quickie
+# Contributing to qkrun
 
 Thanks for your interest in contributing! This guide covers how to set up the project, run the checks that are enforced in CI, and submit changes.
 
@@ -8,8 +8,8 @@ The project uses [uv](https://docs.astral.sh/uv/) for dependency management and 
 
 ```bash
 # Fork the repository on GitHub, then clone your fork:
-git clone https://github.com/<your-username>/quickie.git
-cd quickie
+git clone https://github.com/<your-username>/qkrun.git
+cd qkrun
 
 # Install dependencies
 uv sync --dev
@@ -40,7 +40,7 @@ GitHub Actions runs the following on every push and pull request (see `.github/w
 
 ## Coverage
 
-New code should be covered by tests. `src/quickie/__main__.py` is a thin wrapper around `quickie._cli.main`; the relevant tests live in `tests/test_main.py`.
+New code should be covered by tests. `src/qkrun/__main__.py` is a thin wrapper around `qkrun._cli.main`; the relevant tests live in `tests/test_main.py`.
 
 To see the coverage report:
 

@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from quickie._namespace import RootNamespace
+from qkrun._namespace import RootNamespace
 
 
 @pytest.fixture(autouse=True)
@@ -12,15 +12,15 @@ def patch_config(tmpdir_factory, mocker):
     mocker.patch.dict("os.environ", {"QK_LAUNCHER_RUNNING": "true"})
 
     # Patch the configure method
-    mocker.patch("quickie.app._home_path", Path("tests/_qk_home"), create=True)
-    mocker.patch("quickie.app._project_path", Path("tests/_qk_test"), create=True)
+    mocker.patch("qkrun.app._home_path", Path("tests/_qk_home"), create=True)
+    mocker.patch("qkrun.app._project_path", Path("tests/_qk_test"), create=True)
     mocker.patch(
-        "quickie.app._tmp_relative_path",
-        Path(tmpdir_factory.mktemp("quickie_tmp")),
+        "qkrun.app._tmp_relative_path",
+        Path(tmpdir_factory.mktemp("qkrun_tmp")),
         create=True,
     )
 
     # Reset the namespace every time
-    mocker.patch("quickie.app._tasks", RootNamespace(), create=True)
-    mocker.patch("quickie.app.program_name", "qk")
-    mocker.patch("quickie.app._cached_task_names", None, create=True)
+    mocker.patch("qkrun.app._tasks", RootNamespace(), create=True)
+    mocker.patch("qkrun.app.program_name", "qk")
+    mocker.patch("qkrun.app._cached_task_names", None, create=True)

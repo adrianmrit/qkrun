@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "quickie-runner"
+name = "qkrun"
 dynamic = ["version"]
 description = "A CLI tool for quick tasks."
 readme = "README.md"
@@ -31,26 +31,26 @@ dependencies=[
 ]
 
 [project.urls]
-Homepage = "https://github.com/adrianmrit/quickie"
-Documentation = "https://quickie.readthedocs.io"
-Repository = "https://github.com/adrianmrit/quickie.git"
-Issues = "https://github.com/adrianmrit/quickie/issues"
-Changelog = "https://github.com/adrianmrit/quickie/blob/main/CHANGELOG.md"
+Homepage = "https://github.com/adrianmrit/qkrun"
+Documentation = "https://qkrun.readthedocs.io"
+Repository = "https://github.com/adrianmrit/qkrun.git"
+Issues = "https://github.com/adrianmrit/qkrun/issues"
+Changelog = "https://github.com/adrianmrit/qkrun/blob/main/CHANGELOG.md"
 
 [project.optional-dependencies]
 
 [project.scripts]
-"qk" = "quickie._cli:main"
-"qk-mcp" = "quickie.mcp:main"
+"qk" = "qkrun._cli:main"
+"qk-mcp" = "qkrun.mcp:main"
 
 [tool.hatch.metadata]
 allow-direct-references = true
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/quickie"]
+packages = ["src/qkrun"]
 
 [tool.hatch.version]
-path = "src/quickie/_meta.py"
+path = "src/qkrun/_meta.py"
 
 [tool.hatch.build]
 exclude = ["_qk"]
@@ -66,7 +66,7 @@ python_files = "tests/*.py"
 mock_use_standalone_module = true
 
 [tool.coverage.run]
-source = ["src/quickie"]
+source = ["src/qkrun"]
 omit = [
     "tests/*",
     "_qk/*"

@@ -15,7 +15,7 @@ For example if defining the following tasks:
 
 .. code-block:: python
 
-    from quickie import task
+    from qkrun import task
 
     @task
     def _Task__1_():
@@ -34,16 +34,16 @@ We can run them from the command line as follows:
 
 .. code-block:: shell
 
-    $ quickie task-1
+    $ qkrun task-1
     Task 1
 
-    $ quickie _Task__2
+    $ qkrun _Task__2
     Task 2
 
-    $ quickie task3
+    $ qkrun task3
     Task 3
 
-    $ quickie t3
+    $ qkrun t3
     Task 3
 
 
@@ -53,7 +53,7 @@ If two tasks have the same name, the last one defined will be used.
 
 .. code-block:: python
 
-    from quickie import task
+    from qkrun import task
 
     @task(name="task")
     def task1():
@@ -65,5 +65,5 @@ If two tasks have the same name, the last one defined will be used.
 
 .. code-block:: shell
 
-    $ quickie task
+    $ qkrun task
     Task 2

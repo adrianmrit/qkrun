@@ -6,7 +6,7 @@ The best way to do so is to create separate modules for each group of tasks and 
 While we could simply import all tasks from the modules, there is a chance of name conflicts and can create
 confusion. To avoid this, we can use namespaces.
 
-The recommended way to define namespaces is with the :func:`quickie.namespace` decorator, which turns a plain
+The recommended way to define namespaces is with the :func:`qkrun.namespace` decorator, which turns a plain
 function into a namespace at module level.
 
 .. WARNING::
@@ -21,14 +21,14 @@ function into a namespace at module level.
 Using the ``@namespace`` decorator
 -----------------------------------
 
-The :func:`quickie.namespace` decorator replaces a function with a :class:`~quickie.Namespace` instance.
+The :func:`qkrun.namespace` decorator replaces a function with a :class:`~qkrun.Namespace` instance.
 The function may return:
 
 * a **dict** mapping path strings to tasks / sub-modules
 * a **list** (or any iterable) of tasks / sub-modules — shorthand for ``{"": [...]}``
 * a **single** task or module — shorthand for ``{"": [obj]}``
 
-Quickie only resolves a namespace when one of its task keys is actually requested. This keeps startup
+qkrun only resolves a namespace when one of its task keys is actually requested. This keeps startup
 fast even if other namespaces perform expensive imports.
 
 **Bare form** — the function name becomes the path prefix:
@@ -36,7 +36,7 @@ fast even if other namespaces perform expensive imports.
 .. code-block:: python
 
     # MyProject/_qk/__init__.py
-    from quickie import namespace
+    from qkrun import namespace
     from . import public, test
 
     @namespace
@@ -79,7 +79,7 @@ Task names and aliases continue to use the normal task separator, ``:``.
 
 .. code-block:: python
 
-    from quickie import namespace
+    from qkrun import namespace
     from . import public, test
 
     @namespace
@@ -95,7 +95,7 @@ avoids having to pass ``path=""`` explicitly.
 
 .. code-block:: python
 
-    from quickie import namespace
+    from qkrun import namespace
     from . import public, test
 
     @namespace(path="")
@@ -115,7 +115,7 @@ Because ``@namespace`` functions are not executed until their tasks are needed, 
 .. code-block:: python
 
     # MyProject/_qk/__init__.py
-    from quickie import namespace
+    from qkrun import namespace
     from . import public, test
 
     @namespace(path="")
@@ -131,7 +131,7 @@ Because ``@namespace`` functions are not executed until their tasks are needed, 
             pass
         return tasks
 
-This lazy behavior also applies when Quickie is discovering tasks for tab completion: only the
+This lazy behavior also applies when qkrun is discovering tasks for tab completion: only the
 namespace relevant to the completion request is resolved.
 
 Namespaces can be nested, allowing for a hierarchical structure:
@@ -139,7 +139,7 @@ Namespaces can be nested, allowing for a hierarchical structure:
 .. code-block:: python
 
     # MyProject/_qk/__init__.py
-    from quickie import namespace
+    from qkrun import namespace
     from . import module1, module2, module3
 
     @namespace
@@ -158,7 +158,7 @@ Multiple namespaces can also be defined in the same module:
 .. code-block:: python
 
     # MyProject/_qk/__init__.py
-    from quickie import namespace
+    from qkrun import namespace
     from . import module1, module2, module3
 
     @namespace
@@ -180,7 +180,7 @@ its tasks available as ``test:<task-name>`` (along with any task aliases).
 The ``Namespace`` class
 ------------------------
 
-For advanced use cases, you can instantiate :class:`quickie.Namespace` directly and mutate it
+For advanced use cases, you can instantiate :class:`qkrun.Namespace` directly and mutate it
 after construction. This is useful when task membership is determined entirely at import time.
 
 ``Namespace`` also accepts a ``factory=...`` parameter for lazy construction, but in most cases
@@ -189,7 +189,7 @@ the ``@namespace`` decorator is the clearer and more ergonomic way to use it.
 .. code-block:: python
 
     # MyProject/_qk/__init__.py
-    from quickie import Namespace, task
+    from qkrun import Namespace, task
 
     namespace = Namespace()
 
@@ -206,11 +206,11 @@ the ``@namespace`` decorator is the clearer and more ergonomic way to use it.
     # Multiple tasks can be added at once under the same namespace
     namespace.add([hello, bye], "namespace")
 
-Nested :class:`~quickie.Namespace` instances can also be passed directly:
+Nested :class:`~qkrun.Namespace` instances can also be passed directly:
 
 .. code-block:: python
 
-    from quickie import Namespace
+    from qkrun import Namespace
     from . import module1, module2, module3
 
     namespace = Namespace(

@@ -1,12 +1,12 @@
 Command
 =======
 
-Command tasks run subprocesses. The simplest way is to use :func:`quickie.command` decorator to define a task.
+Command tasks run subprocesses. The simplest way is to use :func:`qkrun.command` decorator to define a task.
 The decorated function should return either a string of command and arguments in POSIX shell format, or a list of strings.
 
 .. code-block:: python
 
-    from quickie import command
+    from qkrun import command
 
     @command
     def command_from_string():
@@ -16,14 +16,14 @@ The decorated function should return either a string of command and arguments in
     def command_from_list():
         return ["my_command", "arg1", "arg2"]
 
-To create a command from a class, inherit from :class:`quickie.tasks.Command` and replace the :meth:`quickie.tasks.Command.get_cmd` method.
-Or, replace the :meth:`quickie.tasks.Command.get_binary` and :meth:`quickie.tasks.Command.get_cmd_args` methods.
+To create a command from a class, inherit from :class:`qkrun.tasks.Command` and replace the :meth:`qkrun.tasks.Command.get_cmd` method.
+Or, replace the :meth:`qkrun.tasks.Command.get_binary` and :meth:`qkrun.tasks.Command.get_cmd_args` methods.
 
 For example the followings are all equivalent:
 
 .. code-block:: python
 
-    from quickie import Command
+    from qkrun import Command
 
     @task
     class SomeCommand(Command):
@@ -44,7 +44,7 @@ Environment variables
 
 Pass per-task environment variables with ``env``::
 
-    from quickie import command
+    from qkrun import command
 
     @command(env={"API_KEY": "secret"})
     def deploy():
@@ -54,13 +54,13 @@ To load variables from a ``.env`` file, use ``env_file``:
 
 .. code-block:: python
 
-    from quickie import command
+    from qkrun import command
 
     @command(env_file=".env")
     def deploy():
         return ["my_deploy_tool"]
 
-Relative paths are resolved from the quickie tasks root directory (the folder
+Relative paths are resolved from the qkrun tasks root directory (the folder
 that contains ``_qk/``). Absolute paths are used as-is.
 
 When both ``env`` and ``env_file`` are supplied, values in ``env`` take
@@ -83,7 +83,7 @@ for example to inspect values or set a global context from your ``_qk/__init__.p
 
 .. code-block:: python
 
-    from quickie import load_env_file, Context, app
+    from qkrun import load_env_file, Context, app
 
     env = load_env_file(".env")          # returns dict[str, str]
 
@@ -100,7 +100,7 @@ If a command is expected to return a non-zero code, allow it explicitly with ``e
 
 .. code-block:: python
 
-    from quickie import command
+    from qkrun import command
 
     @command(expected_exit_codes=(0, 2))
     def grep_with_no_match_allowed():
@@ -117,14 +117,14 @@ To limit how long a single subprocess attempt may run, set ``timeout`` (in secon
 
 .. code-block:: python
 
-    from quickie import command
+    from qkrun import command
 
     @command(timeout=30)
     def long_running():
         return ["my_tool", "--process"]
 
 If the subprocess does not finish within the allotted time, a
-:exc:`~quickie.errors.SubprocessTimeoutError` is raised (exit code 124).
+:exc:`~qkrun.errors.SubprocessTimeoutError` is raised (exit code 124).
 The same attribute is available on subclasses.
 
 Retry
@@ -135,7 +135,7 @@ number of *additional* attempts:
 
 .. code-block:: python
 
-    from quickie import command
+    from qkrun import command
 
     @command(retries=3)
     def flaky_network_call():
@@ -149,8 +149,8 @@ An optional ``retry_delay`` (in seconds) can be added to wait between attempts:
     def flaky_network_call():
         return ["curl", "https://example.com/api"]
 
-Retries are triggered by both :exc:`~quickie.errors.SubprocessExitCodeError` and
-:exc:`~quickie.errors.SubprocessTimeoutError`. If all attempts fail, the last
+Retries are triggered by both :exc:`~qkrun.errors.SubprocessExitCodeError` and
+:exc:`~qkrun.errors.SubprocessTimeoutError`. If all attempts fail, the last
 exception is re-raised. A warning is logged for each failed attempt and each retry.
 Both attributes are available on subclasses.
 
@@ -164,12 +164,12 @@ By default, command output streams directly to the terminal. Use
 - ``"capture"`` — output is captured as bytes; nothing is printed.
 - ``"tee"`` — output streams to the terminal *and* is captured.
 
-Both :class:`~quickie.tasks.OutputMode` enum values and plain string literals
+Both :class:`~qkrun.tasks.OutputMode` enum values and plain string literals
 are accepted interchangeably:
 
 .. code-block:: python
 
-    from quickie import command, task, OutputMode
+    from qkrun import command, task, OutputMode
 
     # Using the enum
     @command(output_mode=OutputMode.CAPTURE)

@@ -64,7 +64,7 @@ CLI Options
 How It Works
 ------------
 
-Quickie uses `watchdog <https://pypi.org/project/watchdog/>`_ for OS-native file
+qkrun uses `watchdog <https://pypi.org/project/watchdog/>`_ for OS-native file
 watching:
 
 - **macOS**: FSEvents (efficient, low overhead)
@@ -86,7 +86,7 @@ is used, the CLI picks up these defaults automatically.
 
 .. code-block:: python
 
-   from quickie import task
+   from qkrun import task
 
    @task(
        watch_paths=["src/"],
@@ -109,7 +109,7 @@ Then just run:
 
 .. code-block:: python
 
-   from quickie import tasks
+   from qkrun import tasks
 
    class LintTask(tasks.Command):
        watch_paths = ["src/"]
@@ -135,10 +135,10 @@ split on ``;``; path values are passed literally.
 Explicit CLI arguments (``--watch-paths``, ``--watch-patterns``, etc.)
 always override task-defined defaults.
 
-The quickie temporary directory is always excluded, so tasks writing to it do
+The qkrun temporary directory is always excluded, so tasks writing to it do
 not trigger an endless re-run loop.
 
-When a change triggers a re-run, quickie prints the changed paths.  Use this
+When a change triggers a re-run, qkrun prints the changed paths.  Use this
 information to refine ``--watch-paths`` or ``--watch-ignore-patterns``.
 
 Examples

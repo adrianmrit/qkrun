@@ -1,15 +1,15 @@
 Introduction
 ============
 
-Quickie is a simple task runner, inspired on tools like `celery <https://docs.celeryproject.org/en/stable/index.html>`_,
+qkrun is a simple task runner, inspired on tools like `celery <https://docs.celeryproject.org/en/stable/index.html>`_,
 `cargo-make <https://github.com/sagiegurari/cargo-make>`_, `Task <https://taskfile.dev>`_, and `invoke <https://www.pyinvoke.org>`_.
 It aims to be simple to use, easy to extend, and to provide a good experience for developers and teams.
 
-Unlike other task runners that define tasks in YAML, TOML or specialized formats, Quickie uses the Python programming language
+Unlike other task runners that define tasks in YAML, TOML or specialized formats, qkrun uses the Python programming language
 directly, leveraging the power of the language and the ecosystem around it. This means for example, that syntax highlighting,
 errors, and auto completion in most code editors will work out of the box.
 
-Quickie is not limited to Python projects, you can for example define a virtual environment with Quickie and other dependencies
+qkrun is not limited to Python projects, you can for example define a virtual environment with qkrun and other dependencies
 alongside a project that is not using Python at all, similar to how make can be used in non C/C++ projects.
 
 Some features include:
@@ -26,26 +26,26 @@ Some features include:
 Requirements
 --------------
 
-Quickie has been tested on macOs, but should work on Linux and Windows as well. If you find any issues, please open an issue on GitHub.
+qkrun has been tested on macOs, but should work on Linux and Windows as well. If you find any issues, please open an issue on GitHub.
 
 
 Per Project Installation
 ------------------------
 
-The recommended way to use Quickie is to install it per-project in a virtual environment. This allows each project to pin its own version of Quickie and avoids version conflicts across projects.
+The recommended way to use qkrun is to install it per-project in a virtual environment. This allows each project to pin its own version of qkrun and avoids version conflicts across projects.
 
 **With automatic launcher (recommended):**
 
-Once you have Quickie installed in a project virtual environment, you can run tasks from anywhere without manual virtual environment activation. The global ``qk`` command will automatically discover your project and delegate to the project-specific version:
+Once you have qkrun installed in a project virtual environment, you can run tasks from anywhere without manual virtual environment activation. The global ``qk`` command will automatically discover your project and delegate to the project-specific version:
 
 .. code-block:: bash
 
     cd my-project
     python -m venv .venv
-    .venv/bin/pip install quickie-runner
-    qk task-name  # Automatically uses project-specific quickie!
+    .venv/bin/pip install qkrun
+    qk task-name  # Automatically uses project-specific qkrun!
 
-The launcher will search for a ``_qk`` directory or ``_qk.py`` file starting from your current directory and traveling up the directory tree. Once found, it delegates to the quickie installation in that project's virtual environment.
+The launcher will search for a ``_qk`` directory or ``_qk.py`` file starting from your current directory and traveling up the directory tree. Once found, it delegates to the qkrun installation in that project's virtual environment.
 
 **Traditional manual activation (still supported):**
 
@@ -56,14 +56,14 @@ If preferred, you can still manually activate the virtual environment:
     cd my-project
     python -m venv .venv
     source .venv/bin/activate
-    pip install quickie-runner
+    pip install qkrun
     qk --help
 
 
 Global installation
 -------------------
 
-While Quickie allows you to run tasks defined within a project, sometimes it is useful to have global tasks accessible from anywhere. Install ``quickie-runner`` globally (e.g. with pipx) and use the ``--global`` (or ``-g``) flag:
+While qkrun allows you to run tasks defined within a project, sometimes it is useful to have global tasks accessible from anywhere. Install ``qkrun`` globally (e.g. with pipx) and use the ``--global`` (or ``-g``) flag:
 
 .. code-block:: bash
 
@@ -75,7 +75,7 @@ Global tasks are stored in ``~/_qkg`` and are only used when explicitly requeste
 
 .. code-block:: bash
 
-    pipx install quickie-runner
+    pipx install qkrun
     qk --global task-name
 
 .. TIP::
@@ -83,7 +83,7 @@ Global tasks are stored in ``~/_qkg`` and are only used when explicitly requeste
 
     .. code-block:: bash
 
-        pipx inject quickie-runner my-extra-dependency
+        pipx inject qkrun my-extra-dependency
 
 
 Upgrading
@@ -93,19 +93,19 @@ You can also upgrade via ``pip``:
 
 .. code-block:: bash
 
-    pip install --upgrade quickie-runner
+    pip install --upgrade qkrun
 
 
 Or ``pipx``:
 
 .. code-block:: bash
 
-    pipx upgrade quickie-runner
+    pipx upgrade qkrun
 
 
 Auto completion
 ---------------
-Quickie provides auto completion for tasks and arguments via the `argcomplete <https://pypi.org/project/argcomplete/>`_ package.
+qkrun provides auto completion for tasks and arguments via the `argcomplete <https://pypi.org/project/argcomplete/>`_ package.
 
 To enable it, you need to install `argcomplete <https://pypi.org/project/argcomplete/>`_ globally and add the following line to your shell configuration file:
 
@@ -113,7 +113,7 @@ To enable it, you need to install `argcomplete <https://pypi.org/project/argcomp
 
     eval "$(register-python-argcomplete qk)"
 
-This is sufficient for both project tasks and global tasks. When tab completing inside a project directory, the smart launcher delegates to the project-local quickie installation, so completions reflect that project's tasks and version.
+This is sufficient for both project tasks and global tasks. When tab completing inside a project directory, the smart launcher delegates to the project-local qkrun installation, so completions reflect that project's tasks and version.
 
 You can also call ``qk --autocomplete bash`` or ``qk --autocomplete zsh`` for instructions on how to enable auto completion for your shell.
 
@@ -133,7 +133,7 @@ For example:
 .. code-block:: python
 
     # MyProject/_qk.py
-    from quickie import Arg, task, script, command
+    from qkrun import Arg, task, script, command
 
     @task
     def hello():
@@ -190,7 +190,7 @@ Then in the ``__init__.py`` file you can import the tasks from the other files.
 .. code-block:: python
 
     # MyProject/_qk/__init__.py
-    from quickie import namespace
+    from qkrun import namespace
     from . import public
 
     @namespace
@@ -203,7 +203,7 @@ Then in the ``__init__.py`` file you can import the tasks from the other files.
         except ImportError:
             return tasks
 
-Because ``@namespace`` is lazy, the optional ``private`` module is only imported when Quickie
+Because ``@namespace`` is lazy, the optional ``private`` module is only imported when qkrun
 actually needs one of the tasks in this namespace.
 
 

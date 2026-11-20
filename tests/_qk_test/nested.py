@@ -1,4 +1,4 @@
-from quickie import tasks, app, task
+from qkrun import tasks, app, task
 
 
 @task(name="other")

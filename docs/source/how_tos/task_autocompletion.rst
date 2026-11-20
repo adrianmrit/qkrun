@@ -7,8 +7,8 @@ Autocompletion can also be enabled for individual parameters by passing the ``co
 
 .. code-block:: python
 
-    from quickie import Arg, task
-    from quickie.completion import PathCompleter
+    from qkrun import Arg, task
+    from qkrun.completion import PathCompleter
 
     @task(args=[
         Arg("--path", help="A path", completer=PathCompleter()),
@@ -16,7 +16,7 @@ Autocompletion can also be enabled for individual parameters by passing the ``co
     def some_task(path):
         print(f"Path: {path}")
 
-The :class:`~quickie.completion.PathCompleter` accepts an optional ``wd`` parameter
+The :class:`~qkrun.completion.PathCompleter` accepts an optional ``wd`` parameter
 to control which directory paths are resolved relative to, following the same
 rules as task working directories:
 
@@ -36,5 +36,5 @@ rules as task working directories:
 When ``wd`` is ``None`` (the default), completion resolves relative to the
 current working directory, preserving the existing behaviour.
 
-Some completers are provided by Quickie, such as :class:`quickie.completion.PathCompleter` and :class:`quickie.completion.python.PytestCompleter`.
-You can also create your own completers by subclassing :class:`quickie.completion.base.BaseCompleter` and implementing the :meth:`quickie.completion.base.BaseCompleter.complete` method.
+Some completers are provided by qkrun, such as :class:`qkrun.completion.PathCompleter` and :class:`qkrun.completion.python.PytestCompleter`.
+You can also create your own completers by subclassing :class:`qkrun.completion.base.BaseCompleter` and implementing the :meth:`qkrun.completion.base.BaseCompleter.complete` method.

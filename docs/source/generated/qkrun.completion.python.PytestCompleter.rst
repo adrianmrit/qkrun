@@ -1,0 +1,25 @@
+﻿qkrun.completion.python.PytestCompleter
+=======================================
+
+.. currentmodule:: qkrun.completion.python
+
+.. autoclass:: PytestCompleter
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~PytestCompleter.__init__
+      ~PytestCompleter.complete
+      ~PytestCompleter.get_pre_filtered_paths
+      ~PytestCompleter.get_wd
+   
+   
+
+   
+   
+   
